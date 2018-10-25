@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+
+    <color name="gridLineColor">#c51162</color>
+    <color name="gridBackgroundColor">#880e4f</color>
+    <color name="lineColor">#cc000000</color>
+
 </resources>
