@@ -17,10 +17,10 @@ import com.android.gjprojection.roveedoll.R;
 import java.util.ArrayList;
 
 public class DataBackground extends RelativeLayout implements View.OnTouchListener {
-    private static final int LINE_WIDTH = 10;
+    private static final int LINE_WIDTH = 6;
     private static final int GRID_LINE_WIDTH = 1;
-    private static final int GRID_LINE_GAP = 200;
-    private static final int MAX_SCALE = 4;
+    private static final int GRID_LINE_GAP = 50;
+    private static final float SCALE_GAP = 1;
 
     ///////// PAINTERS /////////////
     private @NonNull
@@ -31,7 +31,7 @@ public class DataBackground extends RelativeLayout implements View.OnTouchListen
 
     ///////// ATTRIBUTES ////////////
     private ArrayList<PointScaled> points = new ArrayList<>();
-    private int xScale = 1;
+    private float scale = 1;
 
     public DataBackground(Context context) {
         super(context);
@@ -58,20 +58,24 @@ public class DataBackground extends RelativeLayout implements View.OnTouchListen
         setOnTouchListener(this);
     }
 
-    public int getxScale() {
-        return xScale;
+    public float getScale() {
+        return scale;
     }
 
     public void pushScale() {
-        this.xScale++;
-        if (this.xScale > MAX_SCALE) this.xScale = 1;
+        this.scale += SCALE_GAP;
+        for (PointScaled p : points) {
+            p.scale += SCALE_GAP;
+            if (this.scale == 6) p.scale -=5;
+        }
+        if (this.scale == 6) this.scale = 1;
         invalidate();
     }
 
     private void drawGrid(@NonNull Canvas canvas,
                           final boolean vertical) {
 
-        long gap_sum = GRID_LINE_GAP / xScale;
+        float gap_sum = GRID_LINE_GAP * scale;
         while (gap_sum < (vertical ? getWidth() : getHeight())) {
             canvas.drawLine(
                     vertical ? gap_sum : 0,
@@ -80,17 +84,17 @@ public class DataBackground extends RelativeLayout implements View.OnTouchListen
                     vertical ? getHeight() : gap_sum + GRID_LINE_WIDTH,
                     gridPaint
             );
-            gap_sum += GRID_LINE_GAP / xScale;
+            gap_sum += GRID_LINE_GAP * scale;
         }
     }
 
     private void drawLine(@NonNull Canvas canvas) {
         for (int i = 1; i < points.size(); i++) {
             canvas.drawLine(
-                    points.get(i - 1).x / points.get(i - 1).scale,
-                    points.get(i - 1).y / points.get(i - 1).scale,
-                    points.get(i).x / points.get(i).scale,
-                    points.get(i).y / points.get(i).scale,
+                    points.get(i - 1).x * points.get(i - 1).scale,
+                    points.get(i - 1).y * points.get(i - 1).scale,
+                    points.get(i).x * points.get(i).scale,
+                    points.get(i).y * points.get(i).scale,
                     linePaint
             );
         }
@@ -98,7 +102,7 @@ public class DataBackground extends RelativeLayout implements View.OnTouchListen
 
     private void addPoint(final float x,
                           final float y) {
-        points.add(new PointScaled(x, y, xScale));
+        points.add(new PointScaled(x, y, 1));
         invalidate();
     }
 
