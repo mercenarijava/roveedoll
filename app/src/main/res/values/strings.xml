@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Roveedoll</string>
+    <string name="generic_tm">Tm</string>
+    <string name="generic_powered_by_unive_students">Powered by\nUnive students</string>
 </resources>
