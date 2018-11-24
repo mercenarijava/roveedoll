@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Roveedoll</string>
     <string name="generic_tm">Tm</string>
-    <string name="generic_powered_by_unive_students">Powered by\nUnive students</string>
+    <string name="generic_powered_by_unive_students">Powered by BabyDolls TM</string>
+    <string name="searching_for_roveedoll_robot">Searching for \nRoveedoll robot</string>
+    <string name="connection_successful">Connection successful</string>
 </resources>

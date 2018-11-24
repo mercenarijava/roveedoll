@@ -8,7 +8,7 @@
     tools:context="com.android.gjprojection.roveedoll.SplashActivity">
 
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
@@ -21,8 +21,10 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
+            android:id="@+id/title_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:gravity="center">
 
             <LinearLayout
@@ -50,6 +52,7 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/logo"
                 android:layout_width="@dimen/default_logo_size"
                 android:layout_height="@dimen/default_logo_size"
                 android:src="@drawable/ic_rovedoll" />
@@ -57,15 +60,80 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/content_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:alpha="0"
+            android:background="@color/colorPrimaryDark"
             android:gravity="center"
-            android:layout_marginTop="@dimen/default_layout_margin">
+            android:orientation="vertical">
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/not_connected_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_layout_margin2"
+                android:layout_marginTop="@dimen/default_layout_margin2"
+                android:gravity="center">
 
-    </LinearLayout>
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ProgressBar
+                        android:layout_width="@dimen/default_big_progress_circle_size"
+                        android:layout_height="@dimen/default_big_progress_circle_size"
+                        android:indeterminate="true" />
+
+                    <TextView
+                        android:id="@+id/counter_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="@color/default_white" />
+
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/default_layout_margin"
+                    android:text="@string/searching_for_roveedoll_robot"
+                    android:textColor="@color/default_white"
+                    android:textSize="@dimen/default_text_subtitle" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/connected_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/default_white"
+                android:paddingTop="@dimen/default_layout_margin2"
+                android:paddingBottom="@dimen/default_layout_margin2"
+                android:alpha="0"
+                android:gravity="center">
+
+                <ImageView
+                    android:src="@drawable/ic_bluetooth_connected"
+                    android:layout_marginEnd="@dimen/default_card_margin"
+                    android:layout_width="@dimen/default_big_progress_circle_size"
+                    android:layout_height="@dimen/default_big_progress_circle_size"
+                    android:tint="@color/default_green"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/default_text_title"
+                    android:textColor="@color/default_green"
+                    android:text="@string/connection_successful" />
+
+            </LinearLayout>
+        </FrameLayout>
+    </FrameLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -76,7 +144,7 @@
         android:paddingBottom="@dimen/default_card_margin"
         android:paddingLeft="@dimen/default_layout_margin"
         android:paddingRight="@dimen/default_layout_margin"
-        android:paddingTop="@dimen/default_layout_margin"
+        android:paddingTop="@dimen/default_card_margin"
         android:text="@string/generic_powered_by_unive_students"
         android:textAlignment="center"
         android:textSize="@dimen/default_text_content"
