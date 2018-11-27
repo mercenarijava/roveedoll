@@ -18,14 +18,5 @@ public class MainActivity extends AppCompatActivity {
 
 
         final DataBackground dataBackground = findViewById(R.id.data_background);
-        final Button dataScale = findViewById(R.id.scaleButton);
-        dataScale.setText("x" + dataBackground.getScale());
-        dataScale.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dataBackground.pushScale();
-                dataScale.setText("x" + dataBackground.getScale());
-            }
-        });
     }
 }

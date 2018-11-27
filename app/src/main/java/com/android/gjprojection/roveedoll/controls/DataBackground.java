@@ -17,10 +17,9 @@ import com.android.gjprojection.roveedoll.R;
 import java.util.ArrayList;
 
 public class DataBackground extends RelativeLayout implements View.OnTouchListener {
-    private static final int LINE_WIDTH = 6;
+    private static final int LINE_WIDTH = 10;
     private static final int GRID_LINE_WIDTH = 1;
-    private static final int GRID_LINE_GAP = 50;
-    private static final float SCALE_GAP = 1;
+    private static final int GRID_LINE_GAP = 200;
 
     ///////// PAINTERS /////////////
     private @NonNull
@@ -31,7 +30,6 @@ public class DataBackground extends RelativeLayout implements View.OnTouchListen
 
     ///////// ATTRIBUTES ////////////
     private ArrayList<PointScaled> points = new ArrayList<>();
-    private float scale = 1;
 
     public DataBackground(Context context) {
         super(context);
@@ -58,24 +56,11 @@ public class DataBackground extends RelativeLayout implements View.OnTouchListen
         setOnTouchListener(this);
     }
 
-    public float getScale() {
-        return scale;
-    }
-
-    public void pushScale() {
-        this.scale += SCALE_GAP;
-        for (PointScaled p : points) {
-            p.scale += SCALE_GAP;
-            if (this.scale == 6) p.scale -=5;
-        }
-        if (this.scale == 6) this.scale = 1;
-        invalidate();
-    }
 
     private void drawGrid(@NonNull Canvas canvas,
                           final boolean vertical) {
 
-        float gap_sum = GRID_LINE_GAP * scale;
+        float gap_sum = GRID_LINE_GAP;
         while (gap_sum < (vertical ? getWidth() : getHeight())) {
             canvas.drawLine(
                     vertical ? gap_sum : 0,
@@ -84,7 +69,7 @@ public class DataBackground extends RelativeLayout implements View.OnTouchListen
                     vertical ? getHeight() : gap_sum + GRID_LINE_WIDTH,
                     gridPaint
             );
-            gap_sum += GRID_LINE_GAP * scale;
+            gap_sum += GRID_LINE_GAP;
         }
     }
 

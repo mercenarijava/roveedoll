@@ -8,8 +8,8 @@
     <color name="default_green">#2e7d32</color>
 
 
-    <color name="gridLineColor">#c51162</color>
+    <color name="gridLineColor">@color/colorPrimaryDark</color>
     <color name="gridBackgroundColor">#BDBDBD</color>
-    <color name="lineColor">#cc000000</color>
+    <color name="lineColor">@color/colorAccent</color>
 
 </resources>
