@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content_layout"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.android.gjprojection.roveedoll.MainActivity">
 
-    <com.android.gjprojection.roveedoll.controls.DataBackground
-        android:id="@+id/data_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/gridBackgroundColor">
 
-    </com.android.gjprojection.roveedoll.controls.DataBackground>
-
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>

@@ -1,4 +1,4 @@
-package com.android.gjprojection.roveedoll.controls;
+package com.android.gjprojection.roveedoll.features.free_line.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,16 +10,13 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 
 import com.android.gjprojection.roveedoll.R;
 
 import java.util.ArrayList;
 
-public class DataBackground extends RelativeLayout implements View.OnTouchListener {
-    private static final int LINE_WIDTH = 10;
-    private static final int GRID_LINE_WIDTH = 1;
-    private static final int GRID_LINE_GAP = 200;
+public class FreeLineView extends FrameLayout implements View.OnTouchListener {
 
     ///////// PAINTERS /////////////
     private @NonNull
@@ -27,53 +24,69 @@ public class DataBackground extends RelativeLayout implements View.OnTouchListen
     private @NonNull
     Paint linePaint;
 
-
     ///////// ATTRIBUTES ////////////
     private ArrayList<PointScaled> points = new ArrayList<>();
+    private int gridLineWidth;
+    private int gridLineGap;
 
-    public DataBackground(Context context) {
+    public FreeLineView(
+            Context context) {
         super(context);
         init(context);
     }
 
-    public DataBackground(Context context, @Nullable AttributeSet attrs) {
+    public FreeLineView(
+            Context context,
+            @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public DataBackground(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public FreeLineView(
+            Context context,
+            @Nullable AttributeSet attrs,
+            int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
-    private void init(@NonNull final Context context) {
-        setWillNotDraw(false);
-        gridPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        gridPaint.setColor(ContextCompat.getColor(context, R.color.gridLineColor));
-        linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        linePaint.setColor(ContextCompat.getColor(context, R.color.lineColor));
-        linePaint.setStrokeWidth(LINE_WIDTH);
+    private void init(
+            @NonNull final Context context) {
+        this.setWillNotDraw(false);
+        this.gridLineWidth = context.getResources()
+                .getInteger(R.integer.free_line_view_grid_line_width);
+        this.gridLineGap = context.getResources()
+                .getInteger(R.integer.free_line_view_grid_square_width);
+        this.gridPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        this.gridPaint.setColor(ContextCompat.getColor(context, R.color.gridLineColor));
+        this.linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        this.linePaint.setColor(ContextCompat.getColor(context, R.color.lineColor));
+        this.linePaint.setStrokeWidth(
+                context.getResources()
+                        .getInteger(R.integer.free_line_view_line_width)
+        );
         setOnTouchListener(this);
     }
 
+    private void drawGrid(
+            @NonNull Canvas canvas,
+            final boolean vertical) {
 
-    private void drawGrid(@NonNull Canvas canvas,
-                          final boolean vertical) {
-
-        float gap_sum = GRID_LINE_GAP;
+        float gap_sum = gridLineGap;
         while (gap_sum < (vertical ? getWidth() : getHeight())) {
             canvas.drawLine(
                     vertical ? gap_sum : 0,
                     vertical ? 0 : gap_sum,
-                    vertical ? gap_sum + GRID_LINE_WIDTH : getWidth(),
-                    vertical ? getHeight() : gap_sum + GRID_LINE_WIDTH,
+                    vertical ? gap_sum + gridLineWidth : getWidth(),
+                    vertical ? getHeight() : gap_sum + gridLineWidth,
                     gridPaint
             );
-            gap_sum += GRID_LINE_GAP;
+            gap_sum += gridLineGap;
         }
     }
 
-    private void drawLine(@NonNull Canvas canvas) {
+    private void drawLine(
+            @NonNull Canvas canvas) {
         for (int i = 1; i < points.size(); i++) {
             canvas.drawLine(
                     points.get(i - 1).x * points.get(i - 1).scale,
@@ -85,14 +98,17 @@ public class DataBackground extends RelativeLayout implements View.OnTouchListen
         }
     }
 
-    private void addPoint(final float x,
-                          final float y) {
+    private void addPoint(
+            final float x,
+            final float y) {
         points.add(new PointScaled(x, y, 1));
         invalidate();
     }
 
     @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
+    public boolean onTouch(
+            View view,
+            MotionEvent motionEvent) {
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
@@ -105,7 +121,8 @@ public class DataBackground extends RelativeLayout implements View.OnTouchListen
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(
+            Canvas canvas) {
         super.onDraw(canvas);
         drawGrid(canvas, true);
         drawGrid(canvas, false);

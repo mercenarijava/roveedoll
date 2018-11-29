@@ -76,7 +76,6 @@ public class SplashActivity extends AppCompatActivity implements UIComponent {
         }, ANIMATION_DELAY_MILLIS);
     }
 
-    @Override
     public void setActionBar() {
         if (getSupportActionBar() == null) return;
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);

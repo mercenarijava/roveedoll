@@ -1,0 +1,58 @@
+<com.android.gjprojection.roveedoll.features.free_line.views.FreeLineView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/data_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gridBackgroundColor">
+
+    <LinearLayout
+        android:id="@+id/actions_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_card_margin"
+        android:layout_gravity="end|center_vertical"
+        android:background="@drawable/rectangle_left_corners_radius"
+        android:gravity="center_vertical"
+        android:elevation="8dp"
+        android:clickable="true"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:focusable="true">
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="30dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:background="@drawable/ic_head_line"/>
+
+        <LinearLayout
+            android:id="@+id/actions_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/default_half_card_margin"
+            android:paddingEnd="@dimen/default_half_card_margin">
+
+            <ImageView
+                android:layout_width="@dimen/default_icon_dimen"
+                android:layout_height="@dimen/default_icon_dimen"
+                android:tint="@color/default_white"
+                android:src="@drawable/ic_create"/>
+            <ImageView
+                android:layout_width="@dimen/default_icon_dimen"
+                android:layout_height="@dimen/default_icon_dimen"
+                android:layout_marginTop="@dimen/default_layout_margin"
+                android:tint="@color/default_white"
+                android:src="@drawable/ic_clear"/>
+            <ImageView
+                android:layout_width="@dimen/default_icon_dimen"
+                android:layout_height="@dimen/default_icon_dimen"
+                android:layout_marginTop="@dimen/default_layout_margin"
+                android:tint="@color/default_white"
+                android:src="@drawable/ic_file_upload"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.android.gjprojection.roveedoll.features.free_line.views.FreeLineView>
+
+

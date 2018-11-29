@@ -2,6 +2,7 @@
 <resources>
 
     <dimen name="default_logo_size">105dp</dimen>
+    <dimen name="default_half_card_margin">4dp</dimen>
     <dimen name="default_card_margin">8dp</dimen>
     <dimen name="default_layout_margin">16dp</dimen>
     <dimen name="default_layout_margin2">30dp</dimen>
@@ -10,7 +11,13 @@
     <dimen name="default_text_title">18sp</dimen>
     <dimen name="default_text_subtitle">15sp</dimen>
     <dimen name="default_text_content">12sp</dimen>
-
     <dimen name="default_big_progress_circle_size">65dp</dimen>
+    <dimen name="default_corners_radius">20dp</dimen>
+    <dimen name="default_icon_dimen">36dp</dimen>
 
+
+    <!-- Free line view -->
+    <integer name="free_line_view_line_width">10</integer>
+    <integer name="free_line_view_grid_line_width">1</integer>
+    <integer name="free_line_view_grid_square_width">200</integer>
 </resources>
