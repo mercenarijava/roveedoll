@@ -17,10 +17,13 @@
     <dimen name="default_icon_dimen">40dp</dimen>
     <dimen name="speed_seekbar_width">180dp</dimen>
     <dimen name="speed_seekbar_height">32dp</dimen>
+    <dimen name="console_height_min">110dp</dimen>
+    <dimen name="console_height_max">160dp</dimen>
+    <dimen name="console_width">260dp</dimen>
 
 
     <!-- Free line view -->
-    <integer name="free_line_view_line_width">10</integer>
+    <integer name="free_line_view_line_width_max">30</integer>
     <integer name="free_line_view_grid_line_width">1</integer>
     <integer name="free_line_view_grid_square_width">200</integer>
 </resources>

@@ -64,7 +64,7 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
         this.linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         this.linePaint.setColor(ContextCompat.getColor(context, R.color.lineColor));
         this.linePaint.setStrokeWidth(context.getResources()
-                .getInteger(R.integer.free_line_view_line_width));
+                .getInteger(R.integer.free_line_view_line_width_max) / 2);
         setOnTouchListener(this);
     }
 
@@ -103,6 +103,9 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
     private void drawLine(
             @NonNull Canvas canvas) {
         for (int i = 1; i < points.size(); i++) {
+            this.linePaint.setStrokeWidth(getContext().getResources()
+                    .getInteger(R.integer.free_line_view_line_width_max) *
+                    (points.get(i).speed / 100));
             canvas.drawLine(
                     points.get(i - 1).x * points.get(i - 1).scale,
                     points.get(i - 1).y * points.get(i - 1).scale,
@@ -116,7 +119,7 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
     private void addPoint(
             final float x,
             final float y) {
-        points.add(new PointScaled(x, y, 1));
+        points.add(new PointScaled(x, y, 1, speed));
         invalidate();
     }
 
@@ -146,10 +149,12 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
 
     private static class PointScaled extends Point {
         float scale;
+        int speed;
 
-        PointScaled(float x, float y, float scale) {
+        PointScaled(float x, float y, float scale, int speed) {
             super((int) x, (int) y);
             this.scale = scale;
+            this.speed = speed;
         }
     }
 }

@@ -11,5 +11,7 @@
     <color name="gridLineColor">@color/colorPrimaryDark</color>
     <color name="gridBackgroundColor">#BDBDBD</color>
     <color name="lineColor">@color/colorAccent</color>
+    <color name="white_transparent50">#80f8f8f8</color>
+    <color name="transparent" >#00000000</color>
 
 </resources>

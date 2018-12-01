@@ -9,4 +9,5 @@
     <string name="generic_actions_vertical">A\nC\nT\nI\nO\nN\nS</string>
     <string name="generic_speed_vertical">S\np\ne\ne\nd</string>
     <string name="generic_current_speed">Current speed</string>
+    <string name="generic_info_console">C\no\nn\ns\no\nl\ne</string>
 </resources>
