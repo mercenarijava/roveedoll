@@ -11,9 +11,12 @@
     <dimen name="default_text_title">18sp</dimen>
     <dimen name="default_text_subtitle">15sp</dimen>
     <dimen name="default_text_content">12sp</dimen>
+    <dimen name="default_text_small">9sp</dimen>
     <dimen name="default_big_progress_circle_size">65dp</dimen>
     <dimen name="default_corners_radius">20dp</dimen>
-    <dimen name="default_icon_dimen">36dp</dimen>
+    <dimen name="default_icon_dimen">40dp</dimen>
+    <dimen name="speed_seekbar_width">180dp</dimen>
+    <dimen name="speed_seekbar_height">32dp</dimen>
 
 
     <!-- Free line view -->

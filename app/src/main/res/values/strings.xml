@@ -5,6 +5,8 @@
     <string name="searching_for_roveedoll_robot">Searching for \nRoveedoll robot</string>
     <string name="connection_successful">Connection successful</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="generic_actions_vertical">A\nC\nT\nI\nO\nN\nS</string>
+    <string name="generic_speed_vertical">S\np\ne\ne\nd</string>
+    <string name="generic_current_speed">Current speed</string>
 </resources>

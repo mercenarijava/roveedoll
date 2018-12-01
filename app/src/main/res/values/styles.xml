@@ -17,6 +17,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="TextSmall" parent="Theme.AppCompat.Light">
+        <item name="android:textSize">@dimen/default_text_small</item>
+    </style>
+
 
 
 </resources>

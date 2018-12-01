@@ -17,6 +17,7 @@ import com.android.gjprojection.roveedoll.R;
 import java.util.ArrayList;
 
 public class FreeLineView extends FrameLayout implements View.OnTouchListener {
+    public static final int DEFAULT_SPEED = 50;
 
     ///////// PAINTERS /////////////
     private @NonNull
@@ -28,6 +29,7 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
     private ArrayList<PointScaled> points = new ArrayList<>();
     private int gridLineWidth;
     private int gridLineGap;
+    private int speed = DEFAULT_SPEED;
 
     public FreeLineView(
             Context context) {
@@ -61,11 +63,24 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
         this.gridPaint.setColor(ContextCompat.getColor(context, R.color.gridLineColor));
         this.linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         this.linePaint.setColor(ContextCompat.getColor(context, R.color.lineColor));
-        this.linePaint.setStrokeWidth(
-                context.getResources()
-                        .getInteger(R.integer.free_line_view_line_width)
-        );
+        this.linePaint.setStrokeWidth(context.getResources()
+                .getInteger(R.integer.free_line_view_line_width));
         setOnTouchListener(this);
+    }
+
+    public void clear() {
+        this.points.clear();
+        invalidate();
+    }
+
+    public void undo() {
+        if (points.size() == 0) return;
+        this.points.remove(points.size() - 1);
+        invalidate();
+    }
+
+    public void setSpeed(final int speed) {
+        this.speed = speed;
     }
 
     private void drawGrid(
