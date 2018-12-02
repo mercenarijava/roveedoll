@@ -194,6 +194,25 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle_left_corners_radius"
+        android:backgroundTint="@color/black_transparent50"
+        android:layout_marginTop="@dimen/default_layout_margin"
+        android:gravity="center"
+        android:layout_gravity="end">
+
+        <TextView
+            android:id="@+id/lines_count_textview"
+            style="@style/TextSmall.White"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_card_margin"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
 </com.android.gjprojection.roveedoll.features.free_line.views.FreeLineView>
 
 

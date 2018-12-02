@@ -1,9 +1,9 @@
 package com.android.gjprojection.roveedoll.features.free_line;
 
-import android.app.Fragment;
-import android.content.Context;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.android.gjprojection.roveedoll.R;
 import com.android.gjprojection.roveedoll.UIComponent;
 import com.android.gjprojection.roveedoll.features.free_line.views.FreeLineView;
+import com.android.gjprojection.roveedoll.features.free_line.views.FreeLineViewModel;
 import com.android.gjprojection.roveedoll.utils.AnimatorsUtils;
 
 public class FreeLineFragment extends Fragment implements UIComponent {
@@ -26,7 +27,14 @@ public class FreeLineFragment extends Fragment implements UIComponent {
     private static final int MENU_COLOR_CHANGE_MILLIS = 400;
 
     @NonNull
+    FreeLineViewModel viewModel;
+
+    @NonNull
     FreeLineView view;
+
+    @NonNull
+    TextView linesCount;
+
     @NonNull
     RecyclerView console;
     @NonNull
@@ -87,7 +95,9 @@ public class FreeLineFragment extends Fragment implements UIComponent {
 
     @Override
     public void connectViews(View... views) {
+        this.viewModel = ViewModelProviders.of(FreeLineFragment.this).get(FreeLineViewModel.class);
         if (views.length == 0) return;
+        this.linesCount = views[0].findViewById(R.id.lines_count_textview);
         this.console = views[0].findViewById(R.id.console_recyclerview);
         this.consoleManager = new LinearLayoutManager(getContext());
         this.console.setLayoutManager(consoleManager);
@@ -108,6 +118,33 @@ public class FreeLineFragment extends Fragment implements UIComponent {
 
     @Override
     public void connectListeners() {
+        this.view.setCommunicationViewModel(viewModel);
+
+        this.viewModel.getPointAdd().observe(
+                FreeLineFragment.this,
+                pointScaled -> {
+                    if (pointScaled == null) return;
+                    consoleAdapter.add("action add-point-id " + pointScaled.getId());
+                }
+        );
+
+        this.viewModel.getPointDeleted().observe(
+                FreeLineFragment.this,
+                pointScaled -> {
+                    if (pointScaled == null) return;
+                    consoleAdapter.add("action delete-point-id " + pointScaled.getId());
+                }
+        );
+
+        this.viewModel.getLinesCount().observe(
+                FreeLineFragment.this,
+                lines -> {
+                    if (lines == null) return;
+                    final String s = String.valueOf(FreeLineView.MAX_LINES_ALLOWED - lines);
+                    linesCount.setText(s);
+                }
+        );
+
         this.consoleAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
@@ -157,23 +194,17 @@ public class FreeLineFragment extends Fragment implements UIComponent {
             }
         });
         setRightMenu();
-        updateSpeed(50);
 
-        consoleAdapter.add("--- Hi, my name is Dollconsole !");
-        consoleAdapter.add("--- i am here to let you control all the actions performed...");
-        consoleAdapter.add("--- Good Game :)");
+        this.console.setLayoutFrozen(true);
+        this.speedSeekbar.setProgress(50);
+        this.consoleAdapter.add("--- Hi, my name is Dollconsole !");
+        this.consoleAdapter.add("--- i am here to let you control all the actions performed...");
+        this.consoleAdapter.add("--- Good Game :)");
 
     }
 
-    @Override
-    public void onAttach(
-            Context context) {
-        super.onAttach(context);
-    }
+    private void startUpdateProcess() {
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     private void updateSpeed(final int speed) {
@@ -210,6 +241,8 @@ public class FreeLineFragment extends Fragment implements UIComponent {
                 animateBackgroundTint(speedLayout, open);
             }
         });
+
+        this.uploadAction.setOnClickListener(v -> startUpdateProcess());
     }
 
     private void animateActionLayout(

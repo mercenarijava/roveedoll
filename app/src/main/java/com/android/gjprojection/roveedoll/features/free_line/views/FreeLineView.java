@@ -18,6 +18,12 @@ import java.util.ArrayList;
 
 public class FreeLineView extends FrameLayout implements View.OnTouchListener {
     public static final int DEFAULT_SPEED = 50;
+    public static final int MAX_LINES_ALLOWED = 100;
+    private static final int MIN_POINTS_DISTANCE = 50;
+    private static long LINE_ID = 1;
+
+    ///////// COMMUNICATION /////////
+    private FreeLineViewModel communicationViewModel;
 
     ///////// PAINTERS /////////////
     private @NonNull
@@ -68,14 +74,33 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
         setOnTouchListener(this);
     }
 
-    public void clear() {
+    public void setCommunicationViewModel(FreeLineViewModel communicationViewModel) {
+        this.communicationViewModel = communicationViewModel;
+    }
+
+    private synchronized void updateLinesCount() {
+        this.communicationViewModel
+                .getLinesCount()
+                .setValue(this.points.size() - 1);
+    }
+
+    public synchronized void clear() {
         this.points.clear();
+        this.communicationViewModel
+                .getLinesCount()
+                .setValue(0);
         invalidate();
     }
 
-    public void undo() {
+    public synchronized void undo() {
         if (points.size() == 0) return;
-        this.points.remove(points.size() - 1);
+        final PointScaled removed = this.points.remove(points.size() - 1);
+        this.communicationViewModel
+                .getPointDeleted()
+                .setValue(removed);
+        this.communicationViewModel
+                .getLinesCount()
+                .setValue(this.points.size() > 0 ? this.points.size() - 1 : 0);
         invalidate();
     }
 
@@ -103,9 +128,10 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
     private void drawLine(
             @NonNull Canvas canvas) {
         for (int i = 1; i < points.size(); i++) {
-            this.linePaint.setStrokeWidth(getContext().getResources()
-                    .getInteger(R.integer.free_line_view_line_width_max) *
-                    (points.get(i).speed / 100));
+            float newWidth = getContext().getResources()
+                    .getInteger(R.integer.free_line_view_line_width_max);
+            newWidth *= points.get(i).speed / 100f;
+            this.linePaint.setStrokeWidth(newWidth);
             canvas.drawLine(
                     points.get(i - 1).x * points.get(i - 1).scale,
                     points.get(i - 1).y * points.get(i - 1).scale,
@@ -116,11 +142,30 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
         }
     }
 
-    private void addPoint(
+    private synchronized void addPoint(
             final float x,
             final float y) {
-        points.add(new PointScaled(x, y, 1, speed));
+        final PointScaled newPoint = new PointScaled(x, y, 1, speed, LINE_ID);
+        if (points.size() == 0 || isValidPoint(points.get(points.size() - 1), newPoint)) {
+            LINE_ID++;
+            points.add(newPoint);
+            this.communicationViewModel
+                    .getPointAdd()
+                    .setValue(newPoint);
+        }
+        updateLinesCount();
         invalidate();
+    }
+
+    private boolean isValidPoint(
+            @NonNull PointScaled first,
+            @NonNull PointScaled second) {
+        final double distance =
+                Math.sqrt(
+                        Math.pow((second.x - first.x), 2) +
+                                Math.pow((second.y - first.y), 2)
+                );
+        return distance > MIN_POINTS_DISTANCE && points.size() <= MAX_LINES_ALLOWED;
     }
 
     @Override
@@ -131,7 +176,8 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
             case MotionEvent.ACTION_UP: {
-                addPoint(motionEvent.getX(), motionEvent.getY());
+                if (speed != 0)
+                    addPoint(motionEvent.getX(), motionEvent.getY());
             }
             break;
         }
@@ -147,14 +193,20 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
         drawLine(canvas);
     }
 
-    private static class PointScaled extends Point {
+    public static class PointScaled extends Point {
         float scale;
         int speed;
+        long id;
 
-        PointScaled(float x, float y, float scale, int speed) {
+        PointScaled(float x, float y, float scale, int speed, long lineId) {
             super((int) x, (int) y);
             this.scale = scale;
             this.speed = speed;
+            this.id = lineId;
+        }
+
+        public long getId() {
+            return id;
         }
     }
 }

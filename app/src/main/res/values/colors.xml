@@ -12,6 +12,7 @@
     <color name="gridBackgroundColor">#BDBDBD</color>
     <color name="lineColor">@color/colorAccent</color>
     <color name="white_transparent50">#80f8f8f8</color>
+    <color name="black_transparent50">#80000000</color>
     <color name="transparent" >#00000000</color>
 
 </resources>

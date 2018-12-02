@@ -1,5 +1,7 @@
 package com.android.gjprojection.roveedoll;
 
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -13,10 +15,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        getFragmentManager()
-                .beginTransaction()
-                .add(R.id.content_layout, FreeLineFragment.newInstance())
-                .commit();
+        final FragmentManager fm = getSupportFragmentManager();
+        final FragmentTransaction ft = fm.beginTransaction();
+        ft.add(R.id.content_layout, FreeLineFragment.newInstance());
+        ft.commit();
 
     }
 }
