@@ -13,12 +13,13 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.android.gjprojection.roveedoll.R;
+import com.android.gjprojection.roveedoll.features.free_line.FreeLineViewModel;
 
 import java.util.ArrayList;
 
 public class FreeLineView extends FrameLayout implements View.OnTouchListener {
     public static final int DEFAULT_SPEED = 50;
-    public static final int MAX_LINES_ALLOWED = 100;
+    public static final int MAX_LINES_ALLOWED = 70;
     private static final int MIN_POINTS_DISTANCE = 50;
     private static long LINE_ID = 1;
 
@@ -72,6 +73,10 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
         this.linePaint.setStrokeWidth(context.getResources()
                 .getInteger(R.integer.free_line_view_line_width_max) / 2);
         setOnTouchListener(this);
+    }
+
+    public ArrayList<PointScaled> getPoints() {
+        return points;
     }
 
     public void setCommunicationViewModel(FreeLineViewModel communicationViewModel) {

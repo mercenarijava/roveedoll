@@ -29,7 +29,7 @@ public class ConsoleRecyclerViewAdapter extends RecyclerView.Adapter<ConsoleRecy
         this.data = new ArrayList<>();
     }
 
-    public void add(@NonNull String raw) {
+    void add(@NonNull String raw) {
         this.data.add(raw);
         notifyItemInserted(data.size() - 1);
     }

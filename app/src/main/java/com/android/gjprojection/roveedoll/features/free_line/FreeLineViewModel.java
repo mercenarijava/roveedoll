@@ -1,7 +1,9 @@
-package com.android.gjprojection.roveedoll.features.free_line.views;
+package com.android.gjprojection.roveedoll.features.free_line;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+
+import com.android.gjprojection.roveedoll.features.free_line.views.FreeLineView;
 
 public class FreeLineViewModel extends ViewModel {
     private MutableLiveData<Integer> linesCount;

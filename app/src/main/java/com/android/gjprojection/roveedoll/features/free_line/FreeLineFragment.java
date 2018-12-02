@@ -2,6 +2,8 @@ package com.android.gjprojection.roveedoll.features.free_line;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,16 +20,19 @@ import android.widget.TextView;
 
 import com.android.gjprojection.roveedoll.R;
 import com.android.gjprojection.roveedoll.UIComponent;
+import com.android.gjprojection.roveedoll.features.free_line.update_process.UpdateProcessManger;
 import com.android.gjprojection.roveedoll.features.free_line.views.FreeLineView;
-import com.android.gjprojection.roveedoll.features.free_line.views.FreeLineViewModel;
 import com.android.gjprojection.roveedoll.utils.AnimatorsUtils;
 
 public class FreeLineFragment extends Fragment implements UIComponent {
     private static final int MENU_SLIDE_MILLIS = 300;
     private static final int MENU_COLOR_CHANGE_MILLIS = 400;
+    private static final int CLOSE_MENU_DELAY_MILLIS = 1500;
 
     @NonNull
     FreeLineViewModel viewModel;
+    @NonNull
+    Handler mainHandler = new Handler(Looper.getMainLooper());
 
     @NonNull
     FreeLineView view;
@@ -91,6 +96,12 @@ public class FreeLineFragment extends Fragment implements UIComponent {
         connectViews(view);
         connectListeners();
         return view;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        this.mainHandler.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -204,6 +215,20 @@ public class FreeLineFragment extends Fragment implements UIComponent {
     }
 
     private void startUpdateProcess() {
+        if (this.viewModel.getLinesCount() != null &&
+                this.viewModel.getLinesCount().getValue() != null &&
+                this.viewModel.getLinesCount().getValue() > 0) {
+            this.consoleAdapter.add("action update start");
+            //TODO fixme disable UI
+            UpdateProcessManger.init(this.view.getPoints()).observe(
+                    FreeLineFragment.this,
+                    updateProcessManger -> {
+                        //TODO fixme respond to state changes
+                    }
+            );
+        } else {
+            this.consoleAdapter.add("exception: nothing to update");
+        }
 
     }
 
@@ -220,8 +245,15 @@ public class FreeLineFragment extends Fragment implements UIComponent {
     }
 
     private void setRightMenu() {
+        this.mainHandler.postDelayed(() -> {
+            animateActionLayout(actionsLayout, actionsContent, false);
+            animateBackgroundTint(actionsLayout, false);
+            animateActionLayout(speedLayout, speedContent, false);
+            animateBackgroundTint(speedLayout, false);
+        }, CLOSE_MENU_DELAY_MILLIS);
+
         this.actionsLayout.setOnClickListener(new View.OnClickListener() {
-            boolean open = true;
+            boolean open = false;
 
             @Override
             public void onClick(View view) {
@@ -232,7 +264,7 @@ public class FreeLineFragment extends Fragment implements UIComponent {
         });
 
         this.speedLayout.setOnClickListener(new View.OnClickListener() {
-            boolean open = true;
+            boolean open = false;
 
             @Override
             public void onClick(View view) {
