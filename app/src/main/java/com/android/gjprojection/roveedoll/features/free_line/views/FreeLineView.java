@@ -3,6 +3,7 @@ package com.android.gjprojection.roveedoll.features.free_line.views;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,6 +32,10 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
     Paint gridPaint;
     private @NonNull
     Paint linePaint;
+    private @NonNull
+    Paint legendPaint;
+    private @NonNull
+    Paint legendTextPaint;
 
     ///////// ATTRIBUTES ////////////
     private ArrayList<PointScaled> points = new ArrayList<>();
@@ -72,6 +77,15 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
         this.linePaint.setColor(ContextCompat.getColor(context, R.color.lineColor));
         this.linePaint.setStrokeWidth(context.getResources()
                 .getInteger(R.integer.free_line_view_line_width_max) / 2);
+        this.legendPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        this.legendPaint.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        this.legendPaint.setStrokeWidth(context.getResources()
+                .getInteger(R.integer.free_line_view_line_width_max) / 2);
+        this.legendPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        this.legendTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        this.legendTextPaint.setTextSize(context.getResources()
+                .getInteger(R.integer.free_line_view_line_width_max) * 2);
+        this.legendTextPaint.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
         setOnTouchListener(this);
     }
 
@@ -135,7 +149,7 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
         for (int i = 1; i < points.size(); i++) {
             float newWidth = getContext().getResources()
                     .getInteger(R.integer.free_line_view_line_width_max);
-            newWidth *= points.get(i).speed / 100f;
+            newWidth *= 1f - (points.get(i).speed / 100f);
             this.linePaint.setStrokeWidth(newWidth);
             canvas.drawLine(
                     points.get(i - 1).x * points.get(i - 1).scale,
@@ -145,6 +159,59 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
                     linePaint
             );
         }
+    }
+
+    private void drawLegend(
+            @NonNull Canvas canvas) {
+        float offsetFromBottom = canvas.getHeight() % gridLineGap;
+        canvas.drawLine(
+                gridLineGap,
+                canvas.getHeight() - offsetFromBottom,
+                gridLineGap * 2,
+                canvas.getHeight() - offsetFromBottom,
+                legendPaint
+        );
+        drawTriangle(canvas, true);
+        drawTriangle(canvas, false);
+        drawLegendText(canvas);
+    }
+
+    private void drawTriangle(
+            @NonNull Canvas canvas,
+            boolean left) {
+        final Path path = new Path();
+        float offsetFromBottom = canvas.getHeight() % gridLineGap;
+        float tirangleLineWidth = gridLineWidth * 10;
+        path.setFillType(Path.FillType.EVEN_ODD);
+        path.moveTo(
+                left ? gridLineGap : gridLineGap * 2,
+                canvas.getHeight() - offsetFromBottom);
+        path.lineTo(
+                left ? gridLineGap + tirangleLineWidth : gridLineGap * 2 - tirangleLineWidth,
+                canvas.getHeight() - offsetFromBottom - tirangleLineWidth
+        );
+        path.lineTo(
+                left ? gridLineGap + tirangleLineWidth : gridLineGap * 2 - tirangleLineWidth,
+                canvas.getHeight() - offsetFromBottom + tirangleLineWidth
+        );
+        path.lineTo(
+                left ? gridLineGap : gridLineGap * 2,
+                canvas.getHeight() - offsetFromBottom
+        );
+        path.close();
+
+        canvas.drawPath(path, legendPaint);
+    }
+
+    private void drawLegendText(
+            @NonNull Canvas canvas) {
+        float offsetFromBottom = canvas.getHeight() % gridLineGap;
+        canvas.drawText(
+                "1m",
+                gridLineGap + gridLineGap / 3f,
+                canvas.getHeight() - offsetFromBottom - gridLineGap / 7f,
+                legendTextPaint
+        );
     }
 
     private synchronized void addPoint(
@@ -196,6 +263,7 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
         drawGrid(canvas, true);
         drawGrid(canvas, false);
         drawLine(canvas);
+        drawLegend(canvas);
     }
 
     public static class PointScaled extends Point {
