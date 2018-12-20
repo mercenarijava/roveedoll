@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.gjprojection.roveedoll.services.BluetoothManager;
+import com.android.gjprojection.roveedoll.services.bluetooth.BluetoothManager;
 
 import java.util.Timer;
 import java.util.TimerTask;
