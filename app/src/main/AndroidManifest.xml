@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+
     <application
         android:name=".services.RoveedollApplication"
         android:allowBackup="true"
@@ -25,10 +26,6 @@
             android:name=".SplashActivity"
             android:theme="@style/AppThemeNoActionBar" />
 
-        <receiver
-            android:name=".services.bluetooth.BleScanReceiver"
-            android:enabled="true"
-            android:exported="true" />
     </application>
 
 </manifest>

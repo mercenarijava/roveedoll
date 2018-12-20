@@ -105,6 +105,7 @@ public class SplashActivity extends AppCompatActivity implements UIComponent {
     }
 
     private void configureBluetoothConnection() {
+        /*
         BluetoothManager.get()
                 .getDeviceConnection()
                 .observe(
@@ -117,6 +118,7 @@ public class SplashActivity extends AppCompatActivity implements UIComponent {
                             }
                         }
                 );
+                */
     }
 
     private void completeConnection() {
