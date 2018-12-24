@@ -23,7 +23,9 @@ import static com.android.gjprojection.roveedoll.utils.Constants.PERMISSIONS_REQ
 public class BluetoothManager {
     private static BluetoothManager bluetoothManager;
 
-    private MutableLiveData<BleDevice> connectedDeviceLiveData;
+    private MutableLiveData<BleDevice> activeDeviceLiveData;
+    private MutableLiveData<BleReceiveMessage> messageReceiverLiveData;
+    private MutableLiveData<Boolean> activeDeviceConnectionLiveData;
     private BluetoothAdapter mBluetoothAdapter;
 
     // Create a BroadcastReceiver for ACTION_FOUND | ACTION CONNECTED | ACTION DISCONNECTED | ACTION DISCONNECTING
@@ -36,12 +38,12 @@ public class BluetoothManager {
                 final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 BluetoothManager.deviceFound(device);
             } else if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
-                final BleDevice bleDevice = connectedDeviceLiveData.getValue();
+                final BleDevice bleDevice = activeDeviceLiveData.getValue();
                 if (bleDevice == null) return;
                 bleDevice.setState(BleDevice.State.CONNECTED);
                 notifyBleDevice();
             } else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
-                final BleDevice bleDevice = connectedDeviceLiveData.getValue();
+                final BleDevice bleDevice = activeDeviceLiveData.getValue();
                 if (bleDevice == null) return;
                 bleDevice.setState(BleDevice.State.DISCONNECTED);
                 notifyBleDevice();
@@ -74,7 +76,7 @@ public class BluetoothManager {
     private void manageDeviceFound(
             @NonNull BluetoothDevice bluetoothDevice) {
         @Nullable final BleDevice ev3Device = BluetoothUtils.getEv3BleDevice(bluetoothDevice);
-        if (ev3Device != null) connectedDeviceLiveData.setValue(ev3Device);
+        if (ev3Device != null) activeDeviceLiveData.setValue(ev3Device);
     }
 
     /**
@@ -83,10 +85,54 @@ public class BluetoothManager {
      * @return LiveData<BleDevice>
      */
     public LiveData<BleDevice> getDeviceConnection() {
-        if (this.connectedDeviceLiveData == null) {
-            this.connectedDeviceLiveData = new MutableLiveData<>();
+        if (this.activeDeviceLiveData == null) {
+            this.activeDeviceLiveData = new MutableLiveData<>();
         }
-        return connectedDeviceLiveData;
+        return activeDeviceLiveData;
+    }
+
+    /**
+     * Used to monitor the device connection
+     *
+     * @return LiveData<Boolean> true if is connected false otherwise
+     */
+    public LiveData<Boolean> getActiveDeviceConnection() {
+        if (this.activeDeviceConnectionLiveData == null) {
+            this.activeDeviceConnectionLiveData = new MutableLiveData<>();
+            this.activeDeviceConnectionLiveData.setValue(
+                    this.activeDeviceLiveData != null &&
+                            this.activeDeviceLiveData.getValue() != null &&
+                            this.activeDeviceLiveData.getValue().isConnected()
+            );
+        }
+        return activeDeviceConnectionLiveData;
+    }
+
+    /**
+     * Used to receive messages from Ev3 robot
+     *
+     * @return LiveData<BleReceiveMessage>
+     */
+    public LiveData<BleReceiveMessage> getMessageReceiver() {
+        if (this.messageReceiverLiveData == null) {
+            this.messageReceiverLiveData = new MutableLiveData<>();
+        }
+        return messageReceiverLiveData;
+    }
+
+    /**
+     * Use to write something on bluetooth connection
+     *
+     * @param message to write
+     * @return true if successfully write on stream, false otherwise
+     */
+    public synchronized static boolean writeData(
+            @NonNull final BleSendMessage message) {
+        if (bluetoothManager.activeDeviceLiveData == null ||
+                bluetoothManager.activeDeviceLiveData.getValue() == null ||
+                !bluetoothManager.activeDeviceLiveData.getValue().isConnected()) return false;
+
+        return bluetoothManager.activeDeviceLiveData.getValue().writeData(message);
     }
 
     /**
@@ -112,9 +158,9 @@ public class BluetoothManager {
     /**
      * Use to start the device discovery
      */
-    static void startDiscovery() {
+    public static void startDiscovery() {
         if (bluetoothManager == null) return;
-        if (bluetoothManager.mBluetoothAdapter.isDiscovering()) startDiscovery();
+        if (bluetoothManager.mBluetoothAdapter.isDiscovering()) stopDiscovery();
         bluetoothManager
                 .mBluetoothAdapter
                 .startDiscovery();
@@ -135,8 +181,8 @@ public class BluetoothManager {
      */
     static void notifyBleDevice() {
         bluetoothManager
-                .connectedDeviceLiveData
-                .postValue(bluetoothManager.connectedDeviceLiveData.getValue());
+                .activeDeviceLiveData
+                .postValue(bluetoothManager.activeDeviceLiveData.getValue());
     }
 
     /**
@@ -148,6 +194,23 @@ public class BluetoothManager {
             @NonNull BluetoothDevice bluetoothDevice) {
         if (bluetoothManager == null) return;
         bluetoothManager.manageDeviceFound(bluetoothDevice);
+    }
+
+    /**
+     * Used to notify new received message
+     *
+     * @param bleReceiveMessage received
+     */
+    static void messageReceiver(
+            @NonNull final BleReceiveMessage bleReceiveMessage) {
+        if (bluetoothManager == null) return;
+        bluetoothManager.messageReceiverLiveData.postValue(bleReceiveMessage);
+    }
+
+    static void connectionStateChanged(
+            final boolean connected) {
+        if (bluetoothManager == null) return;
+        bluetoothManager.activeDeviceConnectionLiveData.postValue(connected);
     }
 
     /**
