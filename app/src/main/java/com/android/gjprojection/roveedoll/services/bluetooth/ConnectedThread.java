@@ -2,6 +2,7 @@ package com.android.gjprojection.roveedoll.services.bluetooth;
 
 import android.bluetooth.BluetoothSocket;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.android.gjprojection.roveedoll.utils.JacksonUtils;
@@ -9,6 +10,7 @@ import com.android.gjprojection.roveedoll.utils.JacksonUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.WildcardType;
 
 class ConnectedThread extends Thread {
     static final String TAG = ConnectedThread.class.getName();
@@ -67,12 +69,14 @@ class ConnectedThread extends Thread {
     }
 
     // Call this from the main activity to send data to the remote device.
-    boolean write(
-            @NonNull final BleSendMessage message) {
+    <T extends WritableJSON> boolean  write(
+            @NonNull final T message) {
         if (this.mmOutStream == null) return false;
         try {
+            @Nullable final String JSONCommand = message.getJSON();
+            if (JSONCommand == null) return false;
             this.mmOutStream.write(message.getJSON().getBytes());
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage());
             return false;
         }

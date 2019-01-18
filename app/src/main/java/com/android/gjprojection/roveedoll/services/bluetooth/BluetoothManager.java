@@ -126,8 +126,8 @@ public class BluetoothManager {
      * @param message to write
      * @return true if successfully write on stream, false otherwise
      */
-    public synchronized static boolean writeData(
-            @NonNull final BleSendMessage message) {
+    public synchronized static <T extends WritableJSON> boolean writeData(
+            @NonNull final T message) {
         if (bluetoothManager.activeDeviceLiveData == null ||
                 bluetoothManager.activeDeviceLiveData.getValue() == null ||
                 !bluetoothManager.activeDeviceLiveData.getValue().isConnected()) return false;
