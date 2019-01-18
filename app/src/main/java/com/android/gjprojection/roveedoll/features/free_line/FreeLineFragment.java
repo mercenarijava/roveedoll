@@ -20,9 +20,11 @@ import android.widget.TextView;
 
 import com.android.gjprojection.roveedoll.R;
 import com.android.gjprojection.roveedoll.UIComponent;
-import com.android.gjprojection.roveedoll.features.free_line.update_process.UpdateProcessManger;
 import com.android.gjprojection.roveedoll.features.free_line.views.FreeLineView;
 import com.android.gjprojection.roveedoll.utils.AnimatorsUtils;
+import com.android.gjprojection.roveedoll.utils.CommonUtils;
+
+import java.util.ArrayList;
 
 public class FreeLineFragment extends Fragment implements UIComponent {
     private static final int MENU_SLIDE_MILLIS = 300;
@@ -70,6 +72,14 @@ public class FreeLineFragment extends Fragment implements UIComponent {
     ImageView deleteAction;
     @NonNull
     ImageView undoAction;
+
+    @NonNull
+    CommonUtils.GenericAsyncTask uploadTask = new CommonUtils.GenericAsyncTask(() -> {
+        @NonNull final ArrayList<FreeLineView.PointScaled> points = view.getPoints();
+
+        // TODO
+
+    });
 
     public FreeLineFragment() {
         // Required empty public constructor
@@ -215,19 +225,15 @@ public class FreeLineFragment extends Fragment implements UIComponent {
     }
 
     private void startUpdateProcess() {
-        if (this.viewModel.getLinesCount() != null &&
+        final boolean canStartUpdate = this.viewModel.getLinesCount() != null &&
                 this.viewModel.getLinesCount().getValue() != null &&
-                this.viewModel.getLinesCount().getValue() > 0) {
-            this.consoleAdapter.add("action update start");
-            //TODO fixme disable UI
-            UpdateProcessManger.init(this.view.getPoints()).observe(
-                    FreeLineFragment.this,
-                    updateProcessManger -> {
-                        //TODO fixme respond to state changes
-                    }
-            );
-        } else {
-            this.consoleAdapter.add("exception: nothing to update");
+                this.viewModel.getLinesCount().getValue() > 0;
+
+        this.consoleAdapter.add(canStartUpdate ? "action update start" : "exception: nothing to update");
+
+        if (canStartUpdate) {
+            this.uploadTask.cancel(true);
+            this.uploadTask.execute();
         }
 
     }
