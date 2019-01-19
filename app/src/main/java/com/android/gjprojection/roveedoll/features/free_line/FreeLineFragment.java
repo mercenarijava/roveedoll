@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,10 +22,14 @@ import android.widget.TextView;
 import com.android.gjprojection.roveedoll.R;
 import com.android.gjprojection.roveedoll.UIComponent;
 import com.android.gjprojection.roveedoll.features.free_line.views.FreeLineView;
+import com.android.gjprojection.roveedoll.services.bluetooth.BleSendMessageV;
+import com.android.gjprojection.roveedoll.services.bluetooth.BluetoothManager;
 import com.android.gjprojection.roveedoll.utils.AnimatorsUtils;
 import com.android.gjprojection.roveedoll.utils.CommonUtils;
 
 import java.util.ArrayList;
+
+import javax.annotation.Nullable;
 
 public class FreeLineFragment extends Fragment implements UIComponent {
     private static final int MENU_SLIDE_MILLIS = 300;
@@ -73,21 +78,15 @@ public class FreeLineFragment extends Fragment implements UIComponent {
     @NonNull
     ImageView undoAction;
 
-    @NonNull
-    CommonUtils.GenericAsyncTask uploadTask = new CommonUtils.GenericAsyncTask(() -> {
-        @NonNull final ArrayList<FreeLineView.PointScaled> points = view.getPoints();
-
-        // TODO
-
-    });
+    @Nullable
+    CommonUtils.GenericAsyncTask lastUploadTask = null;
 
     public FreeLineFragment() {
         // Required empty public constructor
     }
 
     public static FreeLineFragment newInstance() {
-        FreeLineFragment fragment = new FreeLineFragment();
-        return fragment;
+        return new FreeLineFragment();
     }
 
     @Override
@@ -232,10 +231,83 @@ public class FreeLineFragment extends Fragment implements UIComponent {
         this.consoleAdapter.add(canStartUpdate ? "action update start" : "exception: nothing to update");
 
         if (canStartUpdate) {
-            this.uploadTask.cancel(true);
-            this.uploadTask.execute();
+            if (lastUploadTask != null) lastUploadTask.cancel(true);
+            manageStateUpload(true);
+            this.lastUploadTask = getUploadAsyncTask();
+            this.lastUploadTask.execute();
         }
 
+    }
+
+    private CommonUtils.GenericAsyncTask getUploadAsyncTask() {
+        return new CommonUtils.GenericAsyncTask(() -> {
+            @NonNull final ArrayList<FreeLineView.PointScaled> points = view.getPoints();
+
+            for (int i = 1; i < points.size(); i++) {
+                float direction = CommonUtils.getAngleInOrigins(
+                        points.get(i).x - points.get(i - 1).x,
+                        points.get(i - 1).y - points.get(i).y,
+                        points.get(i).y <= points.get(i - 1).y
+                );
+
+                final BleSendMessageV bleMessage = new BleSendMessageV(
+                        points.get(i).id,
+                        points.get(i).speed,
+                        (int) direction,
+                        (int) ((
+                                Math.sqrt(
+                                        Math.pow(points.get(i).x - points.get(i - 1).x, 2) +
+                                                Math.pow(points.get(i - 1).y - points.get(i).y, 2)
+                                ) / getResources()
+                                        .getInteger(
+                                                R.integer.free_line_view_grid_square_width
+                                        )
+                        ) * 100)
+                );
+
+                final boolean writeSegmentResult = BluetoothManager.writeData(bleMessage);
+                if (!writeSegmentResult) {
+                    this.mainHandler.post(() -> handleLineWriteBroke(bleMessage.lineId));
+                }
+            }
+
+        });
+    }
+
+    @MainThread
+    private void handleLineWriteBroke(
+            final long lineId) {
+        this.consoleAdapter.add("Error occurred in line with id: " + lineId);
+        // TODO
+    }
+
+    private void manageStateUpload(
+            final boolean uploadStateOn) {
+        this.view.setEnabled(!uploadStateOn);
+        this.undoAction.setEnabled(!uploadStateOn);
+        this.deleteAction.setEnabled(!uploadStateOn);
+        this.uploadAction.setEnabled(!uploadStateOn);
+        this.speedSeekbar.setEnabled(!uploadStateOn);
+        this.actionsLayout.setEnabled(!uploadStateOn);
+        this.speedLayout.setEnabled(!uploadStateOn);
+        if (uploadStateOn) {
+            this.openConsole(true);
+        }
+        this.consoleContainer.setEnabled(!uploadStateOn);
+        this.actionsLayout.animate().alpha(uploadStateOn ? 0.7f : 1);
+        this.speedLayout.animate().alpha(uploadStateOn ? 0.7f : 1);
+
+        AnimatorsUtils.animateBackgroundTint(
+                consoleContainer,
+                getResources()
+                        .getColor(uploadStateOn ? R.color.white_transparent50 : R.color.default_white),
+                getResources()
+                        .getColor(uploadStateOn ? R.color.default_white : R.color.white_transparent50),
+                MENU_COLOR_CHANGE_MILLIS
+        );
+
+        this.consoleContainer.animate()
+                .scaleY(uploadStateOn ? 1.1f : 1f);
     }
 
     private void updateSpeed(final int speed) {

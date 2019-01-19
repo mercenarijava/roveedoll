@@ -40,4 +40,18 @@ public class CommonUtils {
         }
     }
 
+    public static float getAngleInOrigins(
+            final float xA,
+            final float yA,
+            final boolean directionUp) {
+        final float xB = 10, yB = 0;
+
+        final float aVectorXbVector = (xA * xB) + (yA * yB);
+        final float aVectorSize = (float) Math.sqrt((xA * xA) + (yA * yA));
+        final float bVectorSize = (float) Math.sqrt((xB * xB) + (yB * yB));
+        final float cosAlpha = aVectorXbVector / (aVectorSize * bVectorSize);
+        final float degrees = (float) ((((float) Math.acos(cosAlpha)) * 180) / Math.PI);
+        return directionUp ? degrees : 180 + (180 - degrees);
+    }
+
 }

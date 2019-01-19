@@ -268,10 +268,10 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
 
     public static class PointScaled extends Point {
         float scale;
-        int speed;
-        long id;
+        public int speed;
+        public long id;
 
-        PointScaled(float x, float y, float scale, int speed, long lineId) {
+        public PointScaled(float x, float y, float scale, int speed, long lineId) {
             super((int) x, (int) y);
             this.scale = scale;
             this.speed = speed;
