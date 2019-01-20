@@ -55,6 +55,8 @@ public class BluetoothManager {
             @NonNull Context context) {
         this.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         getDeviceConnection();
+        getActiveDeviceConnection();
+        getMessageReceiver();
         registerBluetoothReceiver(context);
 
     }
@@ -126,7 +128,7 @@ public class BluetoothManager {
      * @param message to write
      * @return true if successfully write on stream, false otherwise
      */
-    public synchronized static <T extends WritableJSON> boolean writeData(
+    public synchronized static <T extends BleWrittable> boolean writeData(
             @NonNull final T message) {
         if (bluetoothManager.activeDeviceLiveData == null ||
                 bluetoothManager.activeDeviceLiveData.getValue() == null ||

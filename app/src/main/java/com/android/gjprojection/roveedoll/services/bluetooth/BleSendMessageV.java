@@ -1,10 +1,8 @@
 package com.android.gjprojection.roveedoll.services.bluetooth;
 
-import android.support.annotation.Nullable;
+import com.android.gjprojection.roveedoll.utils.Constants;
 
-import com.android.gjprojection.roveedoll.utils.JacksonUtils;
-
-public class BleSendMessageV implements WritableJSON{
+public class BleSendMessageV implements BleWrittable {
 
     public Long lineId;     // lineId
     private Integer speed;      // cm per second
@@ -22,14 +20,14 @@ public class BleSendMessageV implements WritableJSON{
         this.travel = distance;
     }
 
-    /**
-     * Gets he same object's string conversion
-     *
-     * @return JSON string
-     */
     @Override
-    @Nullable
     public String getJSON() {
-        return JacksonUtils.write(this);
+        return String.valueOf(lineId) +
+                Constants.MESSAGE_SEPARATOR +
+                String.valueOf(speed) +
+                Constants.MESSAGE_SEPARATOR +
+                String.valueOf(rotation) +
+                Constants.MESSAGE_SEPARATOR +
+                String.valueOf(travel);
     }
 }

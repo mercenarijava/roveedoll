@@ -1,10 +1,8 @@
 package com.android.gjprojection.roveedoll.services.bluetooth;
 
-import android.support.annotation.Nullable;
+import com.android.gjprojection.roveedoll.utils.Constants;
 
-import com.android.gjprojection.roveedoll.utils.JacksonUtils;
-
-public class BleSendMessageL implements WritableJSON{
+public class BleSendMessageL implements BleWrittable {
     private Integer speedMotorSx;
     private Integer speedMotorDx;
 
@@ -15,14 +13,10 @@ public class BleSendMessageL implements WritableJSON{
         this.speedMotorDx = speedMotorDx;
     }
 
-    /**
-     * Gets he same object's string conversion
-     *
-     * @return JSON string
-     */
     @Override
-    @Nullable
     public String getJSON() {
-        return JacksonUtils.write(this);
+        return String.valueOf(speedMotorSx) +
+                Constants.MESSAGE_SEPARATOR +
+                String.valueOf(speedMotorDx);
     }
 }

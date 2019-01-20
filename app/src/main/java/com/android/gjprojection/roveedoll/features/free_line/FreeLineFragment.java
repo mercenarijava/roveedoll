@@ -243,12 +243,17 @@ public class FreeLineFragment extends Fragment implements UIComponent {
         return new CommonUtils.GenericAsyncTask(() -> {
             @NonNull final ArrayList<FreeLineView.PointScaled> points = view.getPoints();
 
+            Float lastDirection = null;
             for (int i = 1; i < points.size(); i++) {
                 float direction = CommonUtils.getAngleInOrigins(
                         points.get(i).x - points.get(i - 1).x,
                         points.get(i - 1).y - points.get(i).y,
                         points.get(i).y <= points.get(i - 1).y
                 );
+
+                float saveNewDirection = direction;
+                direction = calibrateRobotRotation(lastDirection, direction);
+                lastDirection = saveNewDirection;
 
                 final BleSendMessageV bleMessage = new BleSendMessageV(
                         points.get(i).id,
@@ -272,6 +277,26 @@ public class FreeLineFragment extends Fragment implements UIComponent {
             }
 
         });
+    }
+
+    private float calibrateRobotRotation(
+            @Nullable final Float lastDirection,
+            final float newDirection) {
+        float baseDirection = -90;
+        float direction = newDirection;
+
+        if (lastDirection != null) {
+            direction -=  lastDirection;
+            if(direction > 180) return direction - 360;
+            if(direction < -180) return direction + 360;
+            return direction;
+        }
+
+        if (direction >= 270 && direction <= 360) {
+            return baseDirection + (direction - 360);
+        } else {
+            return direction + baseDirection;
+        }
     }
 
     @MainThread

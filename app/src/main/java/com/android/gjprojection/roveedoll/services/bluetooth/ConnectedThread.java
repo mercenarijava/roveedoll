@@ -2,21 +2,19 @@ package com.android.gjprojection.roveedoll.services.bluetooth;
 
 import android.bluetooth.BluetoothSocket;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.android.gjprojection.roveedoll.utils.JacksonUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.WildcardType;
+import java.io.PrintStream;
 
 class ConnectedThread extends Thread {
     static final String TAG = ConnectedThread.class.getName();
 
     private final InputStream mmInStream;
-    private final OutputStream mmOutStream;
+    private final PrintStream mmOutStream;
     private boolean readOn = true;
     private byte[] mmBuffer; // mmBuffer store for the stream
 
@@ -24,7 +22,7 @@ class ConnectedThread extends Thread {
             @NonNull BluetoothSocket mmSocket) {
 
         InputStream tmpIn;
-        OutputStream tmpOut;
+        PrintStream tmpOut;
 
         // Get the input and output streams; using temp objects because
         // member streams are final.
@@ -34,7 +32,7 @@ class ConnectedThread extends Thread {
             tmpIn = null;
         }
         try {
-            tmpOut = mmSocket.getOutputStream();
+            tmpOut = new PrintStream(mmSocket.getOutputStream(), true);
         } catch (IOException e) {
             tmpOut = null;
         }
@@ -68,18 +66,11 @@ class ConnectedThread extends Thread {
         }
     }
 
-    // Call this from the main activity to send data to the remote device.
-    <T extends WritableJSON> boolean  write(
+    <T extends BleWrittable> boolean write(
             @NonNull final T message) {
         if (this.mmOutStream == null) return false;
-        try {
-            @Nullable final String JSONCommand = message.getJSON();
-            if (JSONCommand == null) return false;
-            this.mmOutStream.write(message.getJSON().getBytes());
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-            return false;
-        }
+        this.mmOutStream.println(message.getJSON() + '\n');
+        this.mmOutStream.flush();
         return true;
     }
 

@@ -47,12 +47,11 @@ public class BleDevice extends BluetoothGattCallback {
         BluetoothManager.notifyBleDevice();
     }
 
-    public <T extends WritableJSON> boolean writeData(
+    public <T extends BleWrittable> boolean writeData(
             @NonNull final T message) {
         if (connectedThread == null) return false;
         return connectedThread.write(message);
     }
-
     BluetoothDevice getBluetoothDevice() {
         return bluetoothDevice;
     }

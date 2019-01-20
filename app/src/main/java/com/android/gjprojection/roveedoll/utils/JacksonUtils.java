@@ -3,6 +3,8 @@ package com.android.gjprojection.roveedoll.utils;
 
 import android.support.annotation.NonNull;
 
+import com.android.gjprojection.roveedoll.services.bluetooth.BleSendMessageL;
+import com.android.gjprojection.roveedoll.services.bluetooth.BleSendMessageV;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,8 +31,20 @@ public class JacksonUtils {
         }
     }
 
-    public static <T> String write(
-            @NonNull final T object) {
+
+
+    public static String write(
+            @NonNull final BleSendMessageV object) {
+        try {
+            return objectMapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String write(
+            @NonNull final BleSendMessageL object) {
         try {
             return objectMapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
