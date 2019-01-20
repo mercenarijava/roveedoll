@@ -13,6 +13,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
@@ -115,10 +116,12 @@ public class BluetoothManager {
      *
      * @return LiveData<BleReceiveMessage>
      */
+    @UiThread
     public LiveData<BleReceiveMessage> getMessageReceiver() {
         if (this.messageReceiverLiveData == null) {
             this.messageReceiverLiveData = new MutableLiveData<>();
         }
+        this.messageReceiverLiveData.setValue(null);
         return messageReceiverLiveData;
     }
 

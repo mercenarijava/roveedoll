@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import com.android.gjprojection.roveedoll.R;
 import com.android.gjprojection.roveedoll.UIComponent;
 import com.android.gjprojection.roveedoll.features.free_line.views.FreeLineView;
+import com.android.gjprojection.roveedoll.services.bluetooth.BleReceiveMessage;
 import com.android.gjprojection.roveedoll.services.bluetooth.BleSendMessageV;
 import com.android.gjprojection.roveedoll.services.bluetooth.BluetoothManager;
 import com.android.gjprojection.roveedoll.utils.AnimatorsUtils;
@@ -43,6 +45,8 @@ public class FreeLineFragment extends Fragment implements UIComponent {
 
     @NonNull
     FreeLineView view;
+    @NonNull
+    LinearLayout loadingLayout;
 
     @NonNull
     TextView linesCount;
@@ -101,10 +105,10 @@ public class FreeLineFragment extends Fragment implements UIComponent {
             ViewGroup container,
             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        this.view = (FreeLineView) inflater.inflate(R.layout.fragment_free_line, container, false);
-        connectViews(view);
+        final View v = inflater.inflate(R.layout.fragment_free_line, container, false);
+        connectViews(v);
         connectListeners();
-        return view;
+        return v;
     }
 
     @Override
@@ -117,6 +121,8 @@ public class FreeLineFragment extends Fragment implements UIComponent {
     public void connectViews(View... views) {
         this.viewModel = ViewModelProviders.of(FreeLineFragment.this).get(FreeLineViewModel.class);
         if (views.length == 0) return;
+        this.view = views[0].findViewById(R.id.data_background);
+        this.loadingLayout = views[0].findViewById(R.id.loading_layout);
         this.linesCount = views[0].findViewById(R.id.lines_count_textview);
         this.console = views[0].findViewById(R.id.console_recyclerview);
         this.consoleManager = new LinearLayoutManager(getContext());
@@ -138,6 +144,7 @@ public class FreeLineFragment extends Fragment implements UIComponent {
 
     @Override
     public void connectListeners() {
+        this.manageStateUpload(false);
         this.view.setCommunicationViewModel(viewModel);
 
         this.viewModel.getPointAdd().observe(
@@ -221,6 +228,74 @@ public class FreeLineFragment extends Fragment implements UIComponent {
         this.consoleAdapter.add("--- i am here to let you control all the actions performed...");
         this.consoleAdapter.add("--- Good Game :)");
 
+        if (getContext() == null) return; // non può succedere
+        BluetoothManager.init(getContext())
+                .getActiveDeviceConnection()
+                .observe(this, connected -> {
+                    if (connected == null) return;
+                    if (!connected) removeInputMessagesObserver();
+
+                    notifyUploadState(false);
+                    setWaitingConnection(connected);
+
+                });
+
+    }
+
+    private void setWaitingConnection(
+            final boolean connected) {
+
+        this.loadingLayout.animate()
+                .alpha(connected ? 0 : 1);
+
+        manageStateUpload(!connected);
+
+    }
+
+    private void removeInputMessagesObserver() {
+        if (getActivity() != null)
+            BluetoothManager.init(getContext())
+                    .getMessageReceiver()
+                    .removeObservers(getActivity());
+    }
+
+    @UiThread
+    private void notifyUploadState(
+            final boolean success) {
+        this.consoleAdapter.upload(
+                success ? "upload completed successfully!" : "upload failed :(",
+                success
+        );
+    }
+
+    @UiThread
+    private void notifyCollision() {
+        this.consoleAdapter.upload(
+                "upload failed, the EV3 robot has collided",
+                false
+        );
+    }
+
+    @UiThread
+    private void handleBleMessage(
+            @Nullable BleReceiveMessage msg) {
+        if (msg == null) return;
+        if (msg.hasCollided()) {
+            removeInputMessagesObserver();
+            notifyCollision();
+            manageStateUpload(false);
+        } else if (
+                msg.isUploadProcessSuccess(
+                        view.getPoints().get(
+                                view.getPoints().size() - 1
+                        ).id
+                )) {
+            removeInputMessagesObserver();
+            notifyUploadState(true);
+            manageStateUpload(false);
+        } else {
+            this.consoleAdapter.add("reached point " + msg.getLineId());
+        }
     }
 
     private void startUpdateProcess() {
@@ -228,15 +303,27 @@ public class FreeLineFragment extends Fragment implements UIComponent {
                 this.viewModel.getLinesCount().getValue() != null &&
                 this.viewModel.getLinesCount().getValue() > 0;
 
-        this.consoleAdapter.add(canStartUpdate ? "action update start" : "exception: nothing to update");
 
         if (canStartUpdate) {
-            if (lastUploadTask != null) lastUploadTask.cancel(true);
+            this.consoleAdapter.add("free line upload started", true, true);
+
+            if (getActivity() != null && getContext() != null) {
+                BluetoothManager.init(getContext())
+                        .getMessageReceiver()
+                        .observe(getActivity(), this::handleBleMessage);
+            }
+
             manageStateUpload(true);
+
+            if (lastUploadTask != null) {
+                lastUploadTask.cancel(true);
+            }
+
             this.lastUploadTask = getUploadAsyncTask();
             this.lastUploadTask.execute();
+        } else {
+            this.consoleAdapter.add("exception: nothing to update", false, false);
         }
-
     }
 
     private CommonUtils.GenericAsyncTask getUploadAsyncTask() {
@@ -286,9 +373,9 @@ public class FreeLineFragment extends Fragment implements UIComponent {
         float direction = newDirection;
 
         if (lastDirection != null) {
-            direction -=  lastDirection;
-            if(direction > 180) return direction - 360;
-            if(direction < -180) return direction + 360;
+            direction -= lastDirection;
+            if (direction > 180) return direction - 360;
+            if (direction < -180) return direction + 360;
             return direction;
         }
 

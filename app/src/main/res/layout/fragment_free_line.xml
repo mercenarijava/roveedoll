@@ -1,72 +1,144 @@
-<com.android.gjprojection.roveedoll.features.free_line.views.FreeLineView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/data_background"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/gridBackgroundColor">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/console_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rectangle_right_corners_radius"
-        android:clickable="true"
-        android:focusable="true"
-        android:backgroundTint="@color/white_transparent50"
-        android:padding="@dimen/default_card_margin"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/default_layout_margin"
-        android:foreground="@drawable/rectangle_right_corners_radius">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/console_recyclerview"
-            android:layout_width="@dimen/console_width"
-            android:layout_height="@dimen/console_height_max"
-            android:clickable="false"
-            android:focusable="false"
-            android:scrollbarAlwaysDrawVerticalTrack="false"
-            android:scrollbars="none" />
+    <com.android.gjprojection.roveedoll.features.free_line.views.FreeLineView
+        android:id="@+id/data_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gridBackgroundColor">
 
         <LinearLayout
-            android:id="@+id/console_title_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="1"
-            android:gravity="center">
+            android:id="@+id/console_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_layout_margin"
+            android:background="@drawable/rectangle_right_corners_radius"
+            android:backgroundTint="@color/white_transparent50"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="@drawable/rectangle_right_corners_radius"
+            android:orientation="horizontal"
+            android:padding="@dimen/default_card_margin">
 
-            <TextView
-                style="@style/TextSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/generic_info_console"
-                android:textAllCaps="true"
-                android:textStyle="bold" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/console_recyclerview"
+                android:layout_width="@dimen/console_width"
+                android:layout_height="@dimen/console_height_max"
+                android:clickable="false"
+                android:focusable="false"
+                android:scrollbarAlwaysDrawVerticalTrack="false"
+                android:scrollbars="none" />
 
+            <LinearLayout
+                android:id="@+id/console_title_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="1"
+                android:gravity="center">
+
+                <TextView
+                    style="@style/TextSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/generic_info_console"
+                    android:textAllCaps="true"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_marginBottom="@dimen/default_layout_margin2"
-        android:gravity="end"
-        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:foreground="@drawable/rectangle_left_corners_radius">
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="@dimen/default_layout_margin2"
+            android:gravity="end"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/actions_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:foreground="@drawable/rectangle_left_corners_radius">
+
+                <LinearLayout
+                    android:id="@+id/actions_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rectangle_left_corners_radius"
+                    android:backgroundTint="@color/white_transparent50"
+                    android:clickable="true"
+                    android:elevation="8dp"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/default_card_margin">
+
+                    <TextView
+                        style="@style/TextSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/generic_actions_vertical"
+                        android:textStyle="bold" />
+
+
+                    <LinearLayout
+                        android:id="@+id/actions_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingEnd="@dimen/default_half_card_margin"
+                        android:paddingStart="@dimen/default_half_card_margin">
+
+                        <ImageView
+                            android:id="@+id/upload_action"
+                            android:layout_width="@dimen/default_icon_dimen"
+                            android:layout_height="@dimen/default_icon_dimen"
+                            android:layout_margin="@dimen/default_half_card_margin"
+                            android:layout_marginTop="@dimen/default_layout_margin"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_file_upload" />
+
+                        <ImageView
+                            android:id="@+id/delete_action"
+                            android:layout_width="@dimen/default_icon_dimen"
+                            android:layout_height="@dimen/default_icon_dimen"
+                            android:layout_margin="@dimen/default_half_card_margin"
+                            android:layout_marginTop="@dimen/default_layout_margin"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_clear" />
+
+                        <ImageView
+                            android:id="@+id/undo_action"
+                            android:layout_width="@dimen/default_icon_dimen"
+                            android:layout_height="@dimen/default_icon_dimen"
+                            android:layout_margin="@dimen/default_half_card_margin"
+                            android:layout_marginTop="@dimen/default_layout_margin"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_undo" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/velocity_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_layout_margin"
                 android:background="@drawable/rectangle_left_corners_radius"
                 android:backgroundTint="@color/white_transparent50"
                 android:clickable="true"
                 android:elevation="8dp"
                 android:focusable="true"
+                android:foreground="@drawable/rectangle_left_corners_radius"
                 android:gravity="center_vertical"
                 android:padding="@dimen/default_card_margin">
 
@@ -75,144 +147,97 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/generic_actions_vertical"
+                    android:text="@string/generic_speed_vertical"
+                    android:textAllCaps="true"
                     android:textStyle="bold" />
 
 
                 <LinearLayout
-                    android:id="@+id/actions_content"
+                    android:id="@+id/velocity_content"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:paddingEnd="@dimen/default_half_card_margin"
                     android:paddingStart="@dimen/default_half_card_margin">
 
-                    <ImageView
-                        android:id="@+id/upload_action"
-                        android:layout_width="@dimen/default_icon_dimen"
-                        android:layout_height="@dimen/default_icon_dimen"
-                        android:layout_margin="@dimen/default_half_card_margin"
-                        android:layout_marginTop="@dimen/default_layout_margin"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                        android:src="@drawable/ic_file_upload" />
+                    <SeekBar
+                        android:id="@+id/velocity_seekbar"
+                        android:layout_width="@dimen/speed_seekbar_width"
+                        android:layout_height="@dimen/speed_seekbar_height"
+                        android:layout_gravity="center" />
 
-                    <ImageView
-                        android:id="@+id/delete_action"
-                        android:layout_width="@dimen/default_icon_dimen"
-                        android:layout_height="@dimen/default_icon_dimen"
-                        android:layout_margin="@dimen/default_half_card_margin"
-                        android:layout_marginTop="@dimen/default_layout_margin"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                        android:src="@drawable/ic_clear" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:gravity="center">
 
-                    <ImageView
-                        android:id="@+id/undo_action"
-                        android:layout_width="@dimen/default_icon_dimen"
-                        android:layout_height="@dimen/default_icon_dimen"
-                        android:layout_margin="@dimen/default_half_card_margin"
-                        android:layout_marginTop="@dimen/default_layout_margin"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                        android:src="@drawable/ic_undo" />
+                        <TextView
+                            style="@style/TextSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/generic_current_speed" />
+
+                        <TextView
+                            android:id="@+id/velocity_textview"
+                            style="@style/TextSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/default_half_card_margin"
+                            android:gravity="center"
+                            android:textStyle="bold" />
+
+
+                    </LinearLayout>
+
                 </LinearLayout>
 
             </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/velocity_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:layout_marginTop="@dimen/default_layout_margin"
             android:background="@drawable/rectangle_left_corners_radius"
-            android:backgroundTint="@color/white_transparent50"
-            android:clickable="true"
-            android:elevation="8dp"
-            android:focusable="true"
-            android:foreground="@drawable/rectangle_left_corners_radius"
-            android:gravity="center_vertical"
-            android:padding="@dimen/default_card_margin">
+            android:backgroundTint="@color/black_transparent50"
+            android:gravity="center">
 
             <TextView
-                style="@style/TextSmall"
+                android:id="@+id/lines_count_textview"
+                style="@style/TextSmall.White"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/generic_speed_vertical"
-                android:textAllCaps="true"
+                android:layout_margin="@dimen/default_card_margin"
                 android:textStyle="bold" />
-
-
-            <LinearLayout
-                android:id="@+id/velocity_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingEnd="@dimen/default_half_card_margin"
-                android:paddingStart="@dimen/default_half_card_margin">
-
-                <SeekBar
-                    android:id="@+id/velocity_seekbar"
-                    android:layout_width="@dimen/speed_seekbar_width"
-                    android:layout_height="@dimen/speed_seekbar_height"
-                    android:layout_gravity="center" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:gravity="center">
-
-                    <TextView
-                        style="@style/TextSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/generic_current_speed" />
-
-                    <TextView
-                        android:id="@+id/velocity_textview"
-                        style="@style/TextSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/default_half_card_margin"
-                        android:gravity="center"
-                        android:text="100%"
-                        android:textStyle="bold" />
-
-
-                </LinearLayout>
-
-            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+    </com.android.gjprojection.roveedoll.features.free_line.views.FreeLineView>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rectangle_left_corners_radius"
-        android:backgroundTint="@color/black_transparent50"
-        android:layout_marginTop="@dimen/default_layout_margin"
+        android:id="@+id/loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_transparent50"
         android:gravity="center"
-        android:layout_gravity="end">
+        android:orientation="horizontal"
+        android:padding="@dimen/default_layout_margin2">
+
+        <ProgressBar
+            android:layout_width="@dimen/default_medium_progress_circle_size"
+            android:layout_height="@dimen/default_medium_progress_circle_size" />
 
         <TextView
-            android:id="@+id/lines_count_textview"
-            style="@style/TextSmall.White"
+            style="@style/TextSubtitle.White"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_card_margin"
-            android:textStyle="bold"/>
+            android:layout_marginStart="@dimen/default_card_margin"
+            android:text="@string/connecting_to_ev3" />
+
 
     </LinearLayout>
-
-</com.android.gjprojection.roveedoll.features.free_line.views.FreeLineView>
-
-
+</RelativeLayout>

@@ -25,6 +25,14 @@
         <item name="android:textColor">@color/default_white</item>
     </style>
 
+    <style name="TextSubtitle" parent="Theme.AppCompat.Light">
+        <item name="android:textSize">@dimen/default_text_subtitle</item>
+    </style>
+
+    <style name="TextSubtitle.White">
+        <item name="android:textColor">@color/default_white</item>
+    </style>
+
 
 
 </resources>

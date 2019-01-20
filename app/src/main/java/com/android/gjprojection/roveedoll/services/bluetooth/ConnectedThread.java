@@ -4,16 +4,15 @@ import android.bluetooth.BluetoothSocket;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.android.gjprojection.roveedoll.utils.JacksonUtils;
-
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 
 class ConnectedThread extends Thread {
     static final String TAG = ConnectedThread.class.getName();
 
-    private final InputStream mmInStream;
+    private final BufferedReader mmInStream;
     private final PrintStream mmOutStream;
     private boolean readOn = true;
     private byte[] mmBuffer; // mmBuffer store for the stream
@@ -21,13 +20,13 @@ class ConnectedThread extends Thread {
     ConnectedThread(
             @NonNull BluetoothSocket mmSocket) {
 
-        InputStream tmpIn;
+        BufferedReader tmpIn;
         PrintStream tmpOut;
 
         // Get the input and output streams; using temp objects because
         // member streams are final.
         try {
-            tmpIn = mmSocket.getInputStream();
+            tmpIn = new BufferedReader(new InputStreamReader(mmSocket.getInputStream()), 2);
         } catch (IOException e) {
             tmpIn = null;
         }
@@ -49,13 +48,18 @@ class ConnectedThread extends Thread {
         while (readOn) {
             // Read from the InputStream.
             try {
-                final int numBytes = mmInStream.read(mmBuffer);
-                final String read = new String(mmBuffer);
-                final BleReceiveMessage receiveMessage =
-                        JacksonUtils.read(BleReceiveMessage.class, read);
+                final String read = mmInStream.readLine();
 
-                if (receiveMessage != null) {
-                    BluetoothManager.messageReceiver(receiveMessage);
+                if (!read.isEmpty()) {
+                    @NonNull final String[] parsedMsg = read.split(",");
+                    if (parsedMsg.length == 3) {
+                        BluetoothManager.messageReceiver(
+                                new BleReceiveMessage(
+                                        Integer.parseInt(parsedMsg[1]),
+                                        Long.parseLong(parsedMsg[2])
+                                )
+                        );
+                    }
                 }
             } catch (IOException e) {
                 Log.e(TAG, e.getMessage());

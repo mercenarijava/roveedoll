@@ -6,6 +6,8 @@
 
     <color name="default_white">#F8f8f8</color>
     <color name="default_green">#2e7d32</color>
+    <color name="default_red">#e53935</color>
+    <color name="default_black">#212121</color>
 
 
     <color name="gridLineColor">@color/colorPrimaryDark</color>
