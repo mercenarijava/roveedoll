@@ -252,11 +252,12 @@ public class FreeLineFragment extends Fragment implements UIComponent {
 
     }
 
+    @MainThread
     private void removeInputMessagesObserver() {
         if (getActivity() != null)
-            BluetoothManager.init(getContext())
-                    .getMessageReceiver()
-                    .removeObservers(getActivity());
+        BluetoothManager.init(getContext())
+                .getMessageReceiver()
+                .removeObservers(getActivity());
     }
 
     @UiThread
@@ -293,7 +294,7 @@ public class FreeLineFragment extends Fragment implements UIComponent {
             removeInputMessagesObserver();
             notifyUploadState(true);
             manageStateUpload(false);
-        } else {
+        } else if (msg.getLineId() != 0) {
             this.consoleAdapter.add("reached point " + msg.getLineId());
         }
     }

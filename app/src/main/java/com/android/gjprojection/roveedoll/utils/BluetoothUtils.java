@@ -18,7 +18,7 @@ public class BluetoothUtils {
 
     public static boolean isEv3BleDevice(
             @NonNull BluetoothDevice bluetoothDevice) {
-        return bluetoothDevice.getName().endsWith(Constants.EV3_ROBOT_NAME);
+        return bluetoothDevice.getName() != null && bluetoothDevice.getName().endsWith(Constants.EV3_ROBOT_NAME);
     }
 
 }

@@ -208,7 +208,7 @@ public class BluetoothManager {
      */
     static void messageReceiver(
             @NonNull final BleReceiveMessage bleReceiveMessage) {
-        if (bluetoothManager == null) return;
+        if (bluetoothManager == null || !bluetoothManager.messageReceiverLiveData.hasActiveObservers()) return;
         bluetoothManager.messageReceiverLiveData.postValue(bleReceiveMessage);
     }
 
