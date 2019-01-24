@@ -37,6 +37,7 @@ public class FreeLineFragment extends Fragment implements UIComponent {
     private static final int MENU_SLIDE_MILLIS = 300;
     private static final int MENU_COLOR_CHANGE_MILLIS = 400;
     private static final int CLOSE_MENU_DELAY_MILLIS = 1500;
+    private static final int END_EXECUTION_DELAY_MILLIS = 3000;
 
     @NonNull
     FreeLineViewModel viewModel;
@@ -255,9 +256,9 @@ public class FreeLineFragment extends Fragment implements UIComponent {
     @MainThread
     private void removeInputMessagesObserver() {
         if (getActivity() != null)
-        BluetoothManager.init(getContext())
-                .getMessageReceiver()
-                .removeObservers(getActivity());
+            BluetoothManager.init(getContext())
+                    .getMessageReceiver()
+                    .removeObservers(getActivity());
     }
 
     @UiThread
@@ -282,9 +283,18 @@ public class FreeLineFragment extends Fragment implements UIComponent {
             @Nullable BleReceiveMessage msg) {
         if (msg == null) return;
         if (msg.hasCollided()) {
+            this.view.setError();
             removeInputMessagesObserver();
             notifyCollision();
-            manageStateUpload(false);
+
+            this.mainHandler.postDelayed(
+                    () -> {
+                        view.clearExecution();
+                        manageStateUpload(false);
+
+                    }, END_EXECUTION_DELAY_MILLIS
+            );
+
         } else if (
                 msg.isUploadProcessSuccess(
                         view.getPoints().get(
@@ -293,50 +303,66 @@ public class FreeLineFragment extends Fragment implements UIComponent {
                 )) {
             removeInputMessagesObserver();
             notifyUploadState(true);
-            manageStateUpload(false);
+            this.view.addExecutedPoint(this.view.getPoints().get(view.getPoints().size() - 1).getId());
+
+            this.mainHandler.postDelayed(
+                    () -> {
+                        this.view.clearExecution();
+                        manageStateUpload(false);
+
+                    }, END_EXECUTION_DELAY_MILLIS
+            );
         } else if (msg.getLineId() != 0) {
             this.consoleAdapter.add("reached point " + msg.getLineId());
+            this.view.addExecutedPoint(msg.getLineId());
+            uploadNextCommand(msg.getLineId());
         }
     }
 
-    private void startUpdateProcess() {
+    private void uploadNextCommand(
+            @Nullable Long pointIdReached) {
         final boolean canStartUpdate = this.viewModel.getLinesCount() != null &&
                 this.viewModel.getLinesCount().getValue() != null &&
                 this.viewModel.getLinesCount().getValue() > 0;
 
 
         if (canStartUpdate) {
-            this.consoleAdapter.add("free line upload started", true, true);
-
-            if (getActivity() != null && getContext() != null) {
-                BluetoothManager.init(getContext())
-                        .getMessageReceiver()
-                        .observe(getActivity(), this::handleBleMessage);
+            if (pointIdReached == null) {
+                this.consoleAdapter.add("free line upload started", true, true);
+                if (getActivity() != null && getContext() != null) {
+                    BluetoothManager.init(getContext())
+                            .getMessageReceiver()
+                            .observe(getActivity(), this::handleBleMessage);
+                }
+                manageStateUpload(true);
+                if (lastUploadTask != null) {
+                    lastUploadTask.cancel(true);
+                }
             }
-
-            manageStateUpload(true);
-
-            if (lastUploadTask != null) {
-                lastUploadTask.cancel(true);
-            }
-
-            this.lastUploadTask = getUploadAsyncTask();
+            this.lastUploadTask = getUploadAsyncTask(pointIdReached);
             this.lastUploadTask.execute();
-        } else {
+        } else
+
+        {
             this.consoleAdapter.add("exception: nothing to update", false, false);
         }
+
     }
 
-    private CommonUtils.GenericAsyncTask getUploadAsyncTask() {
+    private CommonUtils.GenericAsyncTask getUploadAsyncTask(
+            @Nullable Long idPointReached) {
         return new CommonUtils.GenericAsyncTask(() -> {
             @NonNull final ArrayList<FreeLineView.PointScaled> points = view.getPoints();
 
             Float lastDirection = null;
             for (int i = 1; i < points.size(); i++) {
+                @NonNull FreeLineView.PointScaled pA = points.get(i - 1);
+                @NonNull FreeLineView.PointScaled pB = points.get(i);
+
                 float direction = CommonUtils.getAngleInOrigins(
-                        points.get(i).x - points.get(i - 1).x,
-                        points.get(i - 1).y - points.get(i).y,
-                        points.get(i).y <= points.get(i - 1).y
+                        pB.x - pA.x,
+                        pA.y - pB.y,
+                        pB.y <= pA.y
                 );
 
                 float saveNewDirection = direction;
@@ -344,13 +370,13 @@ public class FreeLineFragment extends Fragment implements UIComponent {
                 lastDirection = saveNewDirection;
 
                 final BleSendMessageV bleMessage = new BleSendMessageV(
-                        points.get(i).id,
-                        points.get(i).speed,
+                        pB.id,
+                        pB.speed,
                         (int) direction,
                         (int) ((
                                 Math.sqrt(
-                                        Math.pow(points.get(i).x - points.get(i - 1).x, 2) +
-                                                Math.pow(points.get(i - 1).y - points.get(i).y, 2)
+                                        Math.pow(pB.x - pA.x, 2) +
+                                                Math.pow(pA.y - pB.y, 2)
                                 ) / getResources()
                                         .getInteger(
                                                 R.integer.free_line_view_grid_square_width
@@ -358,10 +384,15 @@ public class FreeLineFragment extends Fragment implements UIComponent {
                         ) * 100)
                 );
 
+                if (idPointReached != null && pA.id != idPointReached) {
+                    continue;
+                }
+
                 final boolean writeSegmentResult = BluetoothManager.writeData(bleMessage);
                 if (!writeSegmentResult) {
                     this.mainHandler.post(() -> handleLineWriteBroke(bleMessage.lineId));
                 }
+                return;
             }
 
         });
@@ -465,7 +496,7 @@ public class FreeLineFragment extends Fragment implements UIComponent {
             }
         });
 
-        this.uploadAction.setOnClickListener(v -> startUpdateProcess());
+        this.uploadAction.setOnClickListener(v -> uploadNextCommand(null));
     }
 
     private void animateActionLayout(

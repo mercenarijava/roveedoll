@@ -39,6 +39,8 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
 
     ///////// ATTRIBUTES ////////////
     private ArrayList<PointScaled> points = new ArrayList<>();
+    private ArrayList<Long> idPointExecutedSuccessfully = new ArrayList<>();
+    private boolean errorExecution = false;
     private int gridLineWidth;
     private int gridLineGap;
     private int speed = DEFAULT_SPEED;
@@ -97,6 +99,22 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
         this.communicationViewModel = communicationViewModel;
     }
 
+    public void clearExecution() {
+        this.idPointExecutedSuccessfully.clear();
+        this.errorExecution = false;
+        invalidate();
+    }
+
+    public synchronized void addExecutedPoint(@NonNull Long idPoint) {
+        this.idPointExecutedSuccessfully.add(idPoint);
+        invalidate();
+    }
+
+    public synchronized void setError() {
+        this.errorExecution = true;
+        invalidate();
+    }
+
     private synchronized void updateLinesCount() {
         this.communicationViewModel
                 .getLinesCount()
@@ -144,6 +162,11 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
         }
     }
 
+    private boolean isPointAlreadyExecuted(
+            long idPoint) {
+        return idPointExecutedSuccessfully.contains(idPoint);
+    }
+
     private void drawLine(
             @NonNull Canvas canvas) {
         for (int i = 1; i < points.size(); i++) {
@@ -151,6 +174,16 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
                     .getInteger(R.integer.free_line_view_line_width_max);
             newWidth *= 1f - (points.get(i).speed / 100f);
             this.linePaint.setStrokeWidth(newWidth);
+
+            int color = ContextCompat.getColor(getContext(), R.color.lineColor);
+            if (errorExecution && i == this.idPointExecutedSuccessfully.size() + 1) {
+                color = ContextCompat.getColor(getContext(), R.color.default_red);
+            } else if (isPointAlreadyExecuted(points.get(i).getId())) {
+                color = ContextCompat.getColor(getContext(), R.color.default_green);
+            }
+
+            linePaint.setColor(color);
+
             canvas.drawLine(
                     points.get(i - 1).x * points.get(i - 1).scale,
                     points.get(i - 1).y * points.get(i - 1).scale,
@@ -160,6 +193,7 @@ public class FreeLineView extends FrameLayout implements View.OnTouchListener {
             );
         }
     }
+
 
     private void drawLegend(
             @NonNull Canvas canvas) {

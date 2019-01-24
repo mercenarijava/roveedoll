@@ -2,7 +2,7 @@ package com.android.gjprojection.roveedoll.services.bluetooth;
 
 
 public class BleReceiveMessage {
-    private static final int DISTANCE_COLLISION_DETECTED_CM = 10;
+    private static final int DISTANCE_COLLISION_DETECTED_CM = 30;
 
     private int obstacleDistanceCM;
     private long isLineViewUploadSuccessfully = 0; // if > 0 is success, < 0 is failure, 0 is nothing
