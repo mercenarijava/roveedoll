@@ -7,19 +7,10 @@ import com.android.gjprojection.roveedoll.services.bluetooth.BluetoothManager;
 
 public class RoveedollApplication extends Application {
 
-    public static Application application;
-
-    static void init(
-            @NonNull RoveedollApplication app) {
-        application = app;
-    }
-
-
     @Override
     public void onCreate() {
         super.onCreate();
-        RoveedollApplication.init(this);
-        BluetoothManager.init(getBaseContext());
+        BluetoothManager.init(getApplicationContext());
     }
 
     @Override

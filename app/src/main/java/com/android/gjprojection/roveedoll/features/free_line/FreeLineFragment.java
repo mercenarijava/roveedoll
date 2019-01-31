@@ -255,8 +255,8 @@ public class FreeLineFragment extends Fragment implements UIComponent {
 
     @MainThread
     private void removeInputMessagesObserver() {
-        if (getActivity() != null)
-            BluetoothManager.init(getContext())
+        if (getActivity() != null && getContext() != null)
+            BluetoothManager.init(getContext().getApplicationContext())
                     .getMessageReceiver()
                     .removeObservers(getActivity());
     }
@@ -330,7 +330,7 @@ public class FreeLineFragment extends Fragment implements UIComponent {
             if (pointIdReached == null) {
                 this.consoleAdapter.add("free line upload started", true, true);
                 if (getActivity() != null && getContext() != null) {
-                    BluetoothManager.init(getContext())
+                    BluetoothManager.init(getContext().getApplicationContext())
                             .getMessageReceiver()
                             .observe(getActivity(), this::handleBleMessage);
                 }
@@ -515,9 +515,9 @@ public class FreeLineFragment extends Fragment implements UIComponent {
             @NonNull View fullLayout,
             final boolean open) {
         int colorTo = getResources()
-                .getColor(open ? R.color.white_transparent50 : R.color.colorPrimaryDark);
+                .getColor(open ? R.color.white_transparent50 : R.color.colorPrimary);
         int colorFrom = getResources()
-                .getColor(open ? R.color.colorPrimaryDark : R.color.white_transparent50);
+                .getColor(open ? R.color.colorPrimary : R.color.white_transparent50);
         AnimatorsUtils.animateBackgroundTint(fullLayout, colorFrom, colorTo, MENU_COLOR_CHANGE_MILLIS);
     }
 }
