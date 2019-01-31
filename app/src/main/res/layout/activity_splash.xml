@@ -74,64 +74,20 @@
                 android:id="@+id/not_connected_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/default_layout_margin2"
-                android:layout_marginTop="@dimen/default_layout_margin2"
+                android:layout_marginBottom="@dimen/default_layout_margin"
+                android:layout_marginTop="@dimen/default_layout_margin"
                 android:gravity="center">
-
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ProgressBar
-                        android:layout_width="@dimen/default_big_progress_circle_size"
-                        android:layout_height="@dimen/default_big_progress_circle_size"
-                        android:indeterminate="true" />
-
-                    <TextView
-                        android:id="@+id/counter_textview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:textColor="@color/default_white" />
-
-                </FrameLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/default_layout_margin"
-                    android:text="@string/searching_for_roveedoll_robot"
+                    android:text="@string/welcome"
                     android:textColor="@color/default_white"
                     android:textSize="@dimen/default_text_subtitle" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/connected_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorAccent"
-                android:paddingTop="@dimen/default_layout_margin2"
-                android:paddingBottom="@dimen/default_layout_margin2"
-                android:alpha="0"
-                android:gravity="center">
-
-                <ImageView
-                    android:src="@drawable/ic_bluetooth_connected"
-                    android:layout_marginEnd="@dimen/default_card_margin"
-                    android:layout_width="@dimen/default_big_progress_circle_size"
-                    android:layout_height="@dimen/default_big_progress_circle_size"
-                    android:tint="@color/default_white"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textSize="@dimen/default_text_title"
-                    android:textColor="@color/default_white"
-                    android:text="@string/connection_successful" />
-
-            </LinearLayout>
         </FrameLayout>
     </FrameLayout>
 

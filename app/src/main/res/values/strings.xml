@@ -2,7 +2,7 @@
     <string name="app_name">Roveedoll</string>
     <string name="generic_tm">Tm</string>
     <string name="generic_powered_by_unive_students">Powered by BabyDolls TM</string>
-    <string name="searching_for_roveedoll_robot">Searching for \nRoveedoll robot</string>
+    <string name="welcome">Application loading\.\.\.</string>
     <string name="connection_successful">Connection successful</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -11,4 +11,30 @@
     <string name="generic_current_speed">Current speed</string>
     <string name="generic_info_console">C\no\nn\ns\no\nl\ne</string>
     <string name="connecting_to_ev3">Connecting to EV3</string>
+
+
+    <string name="programmedPlayDescript">Modalità programmata</string>
+    <string name="manualModeText">Modalità Manuale</string>
+    <string name="programmedModeText">Modalità Programmata</string>
+    <string name="manualPlayDescript">Modalità manuale</string>
+    <string name="informationDescript">informationDescript</string>
+
+    <string name="programmedModeTutorialImageDescript">Icona del tutorial per la guida programmata</string>
+    <string name="programmedModeTutorialText">Guida alla modalità programmata</string>
+    <string name="manualModeTutorialImageDescript">Immagine del tutorial della modalità manuale</string>
+    <string name="manualModeTutorialText">Guida alla modalità manuale</string>
+    <string name="connectionLostTutorialImageDescript">Immagine del tutorial per la perdita della connessione</string>
+    <string name="connectionLostTutorialText">Risoluzione perdita della connessione</string>
+    <string name="contactUsTutorialImageDescript">Immagine del tutorial per i contatti</string>
+    <string name="contactUsTutorialText">Come contattarci</string>
+    <string name="programmedModeIconDescript">Icona del pulsante play in modalità programmata</string>
+    <string name="manualModeIconDescript">Icona play della modalità manuale</string>
+    <string name="informationsText">Informazioni</string>
+    <string name="gameModesText">Modalità di gioco</string>
+    <string name="extraContentText">Altro</string>
+    <string name="information_text">Informazioni aziendali</string>
+    <string name="tutorialDescript">Immagine della card dei tutorial</string>
+    <string name="tutorial_text">Tutorial</string>
+    <string name="menu_title">Dashboard</string>
+    <string name="v_mode_title">Programmed mode</string>
 </resources>

@@ -1,6 +1,6 @@
 package com.android.gjprojection.roveedoll;
 
-import android.arch.lifecycle.Observer;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,9 +12,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import com.android.gjprojection.roveedoll.services.bluetooth.BluetoothManager;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -23,8 +20,11 @@ import java.util.TimerTask;
 public class SplashActivity extends AppCompatActivity implements UIComponent {
     private static final int ANIMATION_DELAY_MILLIS = 1000;
     private static final int ANIMATION_ROTATION_MILLIS = 700;
-    private static final int VERTICAL_TRANSLATION_MISURE = 220;
+    private static final int VERTICAL_TRANSLATION_MISURE = 180;
     private static final int TIMER_DELAY_MILLIS = 1000;
+    private static final int APP_INIT_DELAY_MILLIS = 4000;
+    private static final int COROUTINE_DELAY_SECONDS = 3;
+
 
     @NonNull
     ImageView logoImageView;
@@ -32,12 +32,6 @@ public class SplashActivity extends AppCompatActivity implements UIComponent {
     LinearLayout titleLayout;
     @NonNull
     FrameLayout contentLayout;
-    @NonNull
-    TextView counterTextView;
-    @NonNull
-    LinearLayout notConnectedLayout;
-    @NonNull
-    LinearLayout connectedLayout;
     @NonNull
     Handler mainHandler = new Handler(Looper.getMainLooper());
     @NonNull
@@ -59,21 +53,22 @@ public class SplashActivity extends AppCompatActivity implements UIComponent {
         this.logoImageView = findViewById(R.id.logo);
         this.titleLayout = findViewById(R.id.title_layout);
         this.contentLayout = findViewById(R.id.content_layout);
-        this.counterTextView = findViewById(R.id.counter_textview);
-        this.notConnectedLayout = findViewById(R.id.not_connected_layout);
-        this.connectedLayout = findViewById(R.id.connected_layout);
     }
 
     @Override
     public void connectListeners() {
-        this.mainHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                configureTimer();
-                configureLoader();
-                configureBluetoothConnection();
-            }
+        this.mainHandler.postDelayed(() -> {
+            configureTimer();
+            configureLoader();
+            mainHandler.postDelayed(this::startMainActivity, APP_INIT_DELAY_MILLIS);
         }, ANIMATION_DELAY_MILLIS);
+
+    }
+
+    private void startMainActivity() {
+        @NonNull final Intent a = new Intent(this, MainActivity.class);
+        startActivity(a);
+        finish();
     }
 
     public void setActionBar() {
@@ -86,12 +81,7 @@ public class SplashActivity extends AppCompatActivity implements UIComponent {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                mainHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        coroutine();
-                    }
-                });
+                mainHandler.post(() -> coroutine());
             }
         }, TIMER_DELAY_MILLIS, TIMER_DELAY_MILLIS);
     }
@@ -104,41 +94,9 @@ public class SplashActivity extends AppCompatActivity implements UIComponent {
         this.logoImageView.animate().rotationY(-360).setDuration(ANIMATION_ROTATION_MILLIS);
     }
 
-    private void configureBluetoothConnection() {
-        /*
-        BluetoothManager.get()
-                .getDeviceConnection()
-                .observe(
-                        SplashActivity.this,
-                        new Observer<Boolean>() {
-                            @Override
-                            public void onChanged(@Nullable Boolean isConnected) {
-                                if (isConnected == null || !isConnected) return;
-                                completeConnection();
-                            }
-                        }
-                );
-                */
-    }
-
-    private void completeConnection() {
-        this.notConnectedLayout.animate().alpha(0);
-        this.connectedLayout.animate().alpha(1);
-        this.connectedLayout.animate().scaleX(1.2f);
-        this.connectedLayout.animate().scaleY(1.2f);
-        this.connectedLayout.animate().withEndAction(new Runnable() {
-            @Override
-            public void run() {
-                connectedLayout.animate().scaleX(1f);
-                connectedLayout.animate().scaleY(1f);
-            }
-        });
-    }
-
     private void coroutine() {
-        counterTextView.setText(String.valueOf(timeFromStartSeconds));
-        if (timeFromStartSeconds % 5 == 0) {
-            if ((timeFromStartSeconds / 5) % 2 == 0) {
+        if (timeFromStartSeconds % COROUTINE_DELAY_SECONDS == 0) {
+            if ((timeFromStartSeconds / COROUTINE_DELAY_SECONDS) % 2 == 0) {
                 logoImageView.animate().rotationYBy(-360).setDuration(ANIMATION_ROTATION_MILLIS);
             } else {
                 logoImageView.animate().rotationXBy(360).setDuration(ANIMATION_ROTATION_MILLIS);
@@ -149,8 +107,8 @@ public class SplashActivity extends AppCompatActivity implements UIComponent {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         this.mainHandler.removeCallbacksAndMessages(null);
         this.timer.cancel();
+        super.onDestroy();
     }
 }

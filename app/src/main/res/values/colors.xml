@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--
     <color name="colorPrimary">#FF5722</color>
     <color name="colorPrimaryDark">#A83513</color>
     <color name="colorAccent">#3F51B5</color>
+    -->
+
+    <color name="colorPrimary">#006064</color>
+    <color name="colorPrimaryDark">#00363a</color>
+    <color name="colorAccent">#FF5722</color>
 
     <color name="default_white">#F8f8f8</color>
     <color name="default_green">#2e7d32</color>
     <color name="default_red">#e53935</color>
     <color name="default_black">#212121</color>
+    <color name="default_gray_transparent">#99000000</color>
 
 
     <color name="gridLineColor">@color/colorPrimaryDark</color>
@@ -15,6 +22,18 @@
     <color name="lineColor">@color/colorAccent</color>
     <color name="white_transparent50">#80f8f8f8</color>
     <color name="black_transparent50">#80000000</color>
-    <color name="transparent" >#00000000</color>
+    <color name="transparent">#00000000</color>
+
+
+    <color name="colorAccentShadow">#BF360C</color>
+    <color name="colorBackground">#E0E0E0</color>
+    <color name="cardVla">#4FB3BE</color>
+    <color name="cardLuca">#4FB3BE</color>
+    <color name="colorExtraContentCard">#BDBDBD</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="menuBackground">#F5F5F5</color>
+    <color name="tentafic">#424242</color>
+    <color name="contextTentatif">#F5F5F5</color>
 
 </resources>

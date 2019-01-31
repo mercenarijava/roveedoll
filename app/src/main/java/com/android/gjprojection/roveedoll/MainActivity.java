@@ -1,30 +1,46 @@
 package com.android.gjprojection.roveedoll;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 
-import com.android.gjprojection.roveedoll.features.free_line.FreeLineFragment;
+import com.android.gjprojection.roveedoll.features.free_line.FreeLineActivity;
 import com.android.gjprojection.roveedoll.services.bluetooth.BluetoothManager;
 import com.android.gjprojection.roveedoll.utils.Constants;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements UIBase {
+
+    @NonNull
+    CardView pMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        connectViews();
+        connectListeners();
+    }
+
+    @Override
+    public void connectViews() {
         BluetoothManager.startDiscovery(this);
+        this.pMode = findViewById(R.id.programmedMode);
+    }
 
+    @Override
+    public void connectListeners() {
+        this.setTitle(R.string.menu_title);
+        this.pMode.setOnClickListener(v -> {
+            startVMode();
+        });
+    }
 
-        final FragmentManager fm = getSupportFragmentManager();
-        final FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.content_layout, FreeLineFragment.newInstance());
-        ft.commit();
-
+    private void startVMode() {
+        @NonNull final Intent a = new Intent(this, FreeLineActivity.class);
+        startActivity(a);
     }
 
     @Override
@@ -44,4 +60,5 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
 }

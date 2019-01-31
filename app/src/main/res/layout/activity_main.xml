@@ -1,10 +1,340 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_layout"
+    android:id="@+id/constraintedMenuLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.android.gjprojection.roveedoll.MainActivity">
+    android:background="@color/colorExtraContentCard"
+    tools:context=".MainActivity">
 
 
-</FrameLayout>
+    <!-- Card MODALITA' PROGRAMMATA - vla -->
+    <android.support.v7.widget.CardView
+        android:id="@+id/programmedMode"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/default_layout_margin"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="@dimen/default_card_margin"
+        app:cardElevation="@dimen/default_card_margin"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent=".35"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="1">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/programmedPlayDescript"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_v_bkg" />
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/default_gray_transparent"
+                android:orientation="horizontal"
+                android:padding="@dimen/default_card_margin"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <TextView
+                    style="@style/TextSubtitle.White"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/programmedModeText"
+                    tools:text="@string/programmedModeText" />
+
+                <ImageView
+                    android:layout_width="@dimen/default_layout_margin2"
+                    android:layout_height="@dimen/default_layout_margin2"
+                    android:layout_gravity="end"
+                    android:contentDescription="@string/programmedModeIconDescript"
+                    android:src="@drawable/ic_play" />
+
+
+            </FrameLayout>
+
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <!-- Card MODALITA' MANUALE - Luk -->
+    <android.support.v7.widget.CardView
+        android:id="@+id/manualMode"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/default_layout_margin"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="@dimen/default_card_margin"
+        app:cardElevation="@dimen/default_card_margin"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent=".35"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/programmedMode"
+        app:layout_constraintVertical_weight="1">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/manual_play_img" />
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/default_gray_transparent"
+                android:orientation="horizontal"
+                android:padding="@dimen/default_card_margin"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <TextView
+                    style="@style/TextSubtitle.White"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/manualModeText" />
+
+                <ImageView
+                    android:layout_width="@dimen/default_layout_margin2"
+                    android:layout_height="@dimen/default_layout_margin2"
+                    android:layout_gravity="end"
+                    android:contentDescription="@string/programmedModeIconDescript"
+                    android:src="@drawable/ic_play" />
+
+
+            </FrameLayout>
+
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+    <!--
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:id="@+id/extraContentTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+
+                android:layout_marginStart="10dp"
+
+                android:text="@string/extraContentText"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+
+                app:layout_constraintBottom_toTopOf="@id/informations"
+                app:layout_constraintHeight_default="percent"
+                app:layout_constraintHeight_percent=".15"
+
+
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!- Card TUTORIAL
+            <android.support.v7.widget.CardView
+                android:id="@+id/tutorials"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="13dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                app:cardBackgroundColor="@color/contextTentatif"
+                app:cardElevation="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHeight_default="percent"
+                app:layout_constraintHeight_percent=".75"
+                app:layout_constraintHorizontal_weight="1"
+
+                app:layout_constraintLeft_toRightOf="@id/informations"
+
+                app:layout_constraintRight_toRightOf="parent"
+
+
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.85"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent=".42">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/tutorialImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="30dp"
+                        android:contentDescription="@string/tutorialDescript"
+                        android:src="@drawable/tutorial"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="7dp"
+                        android:text="@string/tutorial_text"
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent" />
+
+
+                </android.support.constraint.ConstraintLayout>
+
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/informations"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp"
+
+                app:cardBackgroundColor="@color/contextTentatif"
+
+                app:cardElevation="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHeight_default="percent"
+                app:layout_constraintHeight_percent=".75"
+                app:layout_constraintLeft_toLeftOf="parent"
+
+                app:layout_constraintRight_toLeftOf="@id/tutorials"
+
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.85"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent=".42"
+
+
+                >
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/informationImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+
+
+                        android:layout_margin="30dp"
+
+
+                        android:contentDescription="@string/informationDescript"
+                        android:src="@drawable/information_img"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="7dp"
+                        android:text="@string/information_text"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent" />
+
+
+                </android.support.constraint.ConstraintLayout>
+
+            </android.support.v7.widget.CardView>
+    -->
+
+
+    <!--
+        <android.support.v7.widget.CardView
+            android:id="@+id/gameModesCard"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+
+            app:cardCornerRadius="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/extraContentCard"
+            app:layout_constraintHeight_default="percent"
+            app:layout_constraintHeight_percent=".65"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            >
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <TextView
+                    android:id="@+id/gamesModeTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+
+                    android:text="@string/gameModesText"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+
+
+                    app:layout_constraintBottom_toTopOf="@id/programmedMode"
+                    app:layout_constraintHeight_default="percent"
+                    app:layout_constraintHeight_percent=".1"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    tools:layout_editor_absoluteX="16dp"
+                    tools:layout_editor_absoluteY="16dp"
+
+                    />
+
+            </android.support.constraint.ConstraintLayout>
+
+
+        </android.support.v7.widget.CardView>
+        -->
+
+
+</android.support.constraint.ConstraintLayout>
