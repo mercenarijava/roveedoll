@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements UIBase {
         BluetoothManager.startDiscovery(this);
         this.pMode = findViewById(R.id.programmedMode);
         this.mMode = findViewById(R.id.manualMode);
+        this.info = findViewById(R.id.information);
+        this.tutorial = findViewById(R.id.tutorial);
     }
 
     @Override
