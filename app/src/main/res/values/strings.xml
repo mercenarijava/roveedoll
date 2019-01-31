@@ -32,9 +32,11 @@
     <string name="informationsText">Informazioni</string>
     <string name="gameModesText">Modalità di gioco</string>
     <string name="extraContentText">Altro</string>
-    <string name="information_text">Informazioni aziendali</string>
+    <string name="information_text">Info</string>
     <string name="tutorialDescript">Immagine della card dei tutorial</string>
     <string name="tutorial_text">Tutorial</string>
     <string name="menu_title">Dashboard</string>
     <string name="v_mode_title">Programmed mode</string>
+    <string name="l_mode_title">Manual mode</string>
+    <string name="tutorials">Tutorials</string>
 </resources>

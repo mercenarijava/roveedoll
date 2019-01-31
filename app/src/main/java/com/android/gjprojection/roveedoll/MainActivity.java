@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 
 import com.android.gjprojection.roveedoll.features.free_line.FreeLineActivity;
+import com.android.gjprojection.roveedoll.features.manual.ManualActivity;
 import com.android.gjprojection.roveedoll.services.bluetooth.BluetoothManager;
 import com.android.gjprojection.roveedoll.utils.Constants;
 
@@ -15,6 +16,12 @@ public class MainActivity extends AppCompatActivity implements UIBase {
 
     @NonNull
     CardView pMode;
+    @NonNull
+    CardView mMode;
+    @NonNull
+    CardView info;
+    @NonNull
+    CardView tutorial;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,18 +35,28 @@ public class MainActivity extends AppCompatActivity implements UIBase {
     public void connectViews() {
         BluetoothManager.startDiscovery(this);
         this.pMode = findViewById(R.id.programmedMode);
+        this.mMode = findViewById(R.id.manualMode);
     }
 
     @Override
     public void connectListeners() {
         this.setTitle(R.string.menu_title);
+
         this.pMode.setOnClickListener(v -> {
-            startVMode();
+            startMode(true);
+        });
+
+        this.mMode.setOnClickListener(v -> {
+            startMode(false);
         });
     }
 
-    private void startVMode() {
-        @NonNull final Intent a = new Intent(this, FreeLineActivity.class);
+    private void startMode(
+            final boolean vMode) {
+        @NonNull final Intent a = new Intent(
+                this,
+                vMode ? FreeLineActivity.class : ManualActivity.class
+        );
         startActivity(a);
     }
 
