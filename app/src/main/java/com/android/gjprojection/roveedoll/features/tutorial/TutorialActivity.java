@@ -1,7 +1,8 @@
 package com.android.gjprojection.roveedoll.features.tutorial;
 
-import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
@@ -29,8 +30,7 @@ public class TutorialActivity extends AppCompatActivity implements UIBase {
 
     @Override
     public void connectListeners() {
-        MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.vid_1);
-        mediaPlayer.start();
+        addFragment();
     }
 
     @Override
@@ -41,6 +41,13 @@ public class TutorialActivity extends AppCompatActivity implements UIBase {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void addFragment() {
+        final FragmentManager fm = getSupportFragmentManager();
+        final FragmentTransaction ft = fm.beginTransaction();
+        ft.add(R.id.fragment_container, new TutorialFragment());
+        ft.commit();
     }
 
 }
