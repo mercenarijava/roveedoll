@@ -39,4 +39,8 @@
     <string name="v_mode_title">Programmed mode</string>
     <string name="l_mode_title">Manual mode</string>
     <string name="tutorials">Tutorials</string>
+    <string name="tutorial_activity_title">Tutorial</string>
+    <string name="information_version">Version 1.1</string>
+    <string name="information_developer">Team: \n\n Andrea Capone \n Endri Kove \n Elsa Sejdi \n Jurgen Gurakuqi \n Luca Danelluzzo \n Vladislav Bogdan</string>
+    <string name="info_activity_title">Info</string>
 </resources>

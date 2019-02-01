@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.widget.LinearLayout;
 
 import com.android.gjprojection.roveedoll.features.free_line.FreeLineActivity;
+import com.android.gjprojection.roveedoll.features.informations.InfoActivity;
 import com.android.gjprojection.roveedoll.features.manual.ManualActivity;
+import com.android.gjprojection.roveedoll.features.tutorial.TutorialActivity;
 import com.android.gjprojection.roveedoll.services.bluetooth.BluetoothManager;
 import com.android.gjprojection.roveedoll.utils.Constants;
 
@@ -22,6 +25,9 @@ public class MainActivity extends AppCompatActivity implements UIBase {
     CardView info;
     @NonNull
     CardView tutorial;
+    @NonNull
+    LinearLayout connectingLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements UIBase {
         this.mMode = findViewById(R.id.manualMode);
         this.info = findViewById(R.id.information);
         this.tutorial = findViewById(R.id.tutorial);
+        this.connectingLayout = findViewById(R.id.connecting_layout);
     }
 
     @Override
@@ -51,6 +58,18 @@ public class MainActivity extends AppCompatActivity implements UIBase {
         this.mMode.setOnClickListener(v -> {
             startMode(false);
         });
+
+        BluetoothManager.init(getApplicationContext())
+                .getActiveDeviceConnection()
+                .observe(this, connected -> {
+                    if (connected == null) return;
+                    this.connectingLayout.animate().translationY(
+                            connected ? -(connectingLayout.getHeight()) : 0
+                    );
+                });
+
+        this.tutorial.setOnClickListener(v -> startTutorial());
+        this.info.setOnClickListener(v -> startInfo());
     }
 
     private void startMode(
@@ -58,6 +77,22 @@ public class MainActivity extends AppCompatActivity implements UIBase {
         @NonNull final Intent a = new Intent(
                 this,
                 vMode ? FreeLineActivity.class : ManualActivity.class
+        );
+        startActivity(a);
+    }
+
+    private void startTutorial() {
+        @NonNull final Intent a = new Intent(
+                this,
+                TutorialActivity.class
+        );
+        startActivity(a);
+    }
+
+    private void startInfo() {
+        @NonNull final Intent a = new Intent(
+                this,
+                InfoActivity.class
         );
         startActivity(a);
     }

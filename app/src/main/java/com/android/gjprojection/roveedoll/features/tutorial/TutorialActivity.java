@@ -1,24 +1,19 @@
-package com.android.gjprojection.roveedoll.features.manual;
+package com.android.gjprojection.roveedoll.features.tutorial;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
 
 import com.android.gjprojection.roveedoll.R;
 import com.android.gjprojection.roveedoll.UIBase;
-import com.android.gjprojection.roveedoll.services.bluetooth.BluetoothManager;
 
-public class ManualActivity extends AppCompatActivity implements UIBase {
-
+public class TutorialActivity extends AppCompatActivity implements UIBase {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_manual);
+        setContentView(R.layout.activity_tutorial);
         connectViews();
         connectListeners();
     }
@@ -29,20 +24,13 @@ public class ManualActivity extends AppCompatActivity implements UIBase {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-        this.setTitle(R.string.l_mode_title);
+        setTitle(R.string.tutorial_activity_title);
     }
 
     @Override
     public void connectListeners() {
-        addFragment();
-
-    }
-
-    private void addFragment() {
-        final FragmentManager fm = getSupportFragmentManager();
-        final FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.content_layout, new OrientationControllerFragment());
-        ft.commit();
+        MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.vid_1);
+        mediaPlayer.start();
     }
 
     @Override

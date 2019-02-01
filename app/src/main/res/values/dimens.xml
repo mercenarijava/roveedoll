@@ -14,6 +14,7 @@
     <dimen name="default_text_small">9sp</dimen>
     <dimen name="default_big_progress_circle_size">65dp</dimen>
     <dimen name="default_medium_progress_circle_size">40dp</dimen>
+    <dimen name="default_small_progress_circle_size">20dp</dimen>
     <dimen name="default_corners_radius">20dp</dimen>
     <dimen name="default_icon_dimen">40dp</dimen>
     <dimen name="speed_seekbar_width">180dp</dimen>
